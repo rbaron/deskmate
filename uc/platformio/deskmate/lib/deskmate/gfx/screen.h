@@ -1,16 +1,16 @@
 #ifndef DESKMATE_GFX_SCREEN_H
 #define DESKMATE_GFX_SCREEN_H
 
-#include "deskmate/input/buttons.h"
+#include "deskmate/input/input.h"
 #include "deskmate/gfx/display.h"
 
 namespace deskmate {
 namespace gfx {
 
-class Screen {
+class Screen : public deskmate::input::InputEventHandler {
  public:
   virtual ~Screen() = default;
-  virtual void HandleInputs(const deskmate::input::InputState& input_state) = 0;
+  virtual void HandleInputEvent(deskmate::input::InputEvent input_event) = 0;
   virtual void Render(Display *display) const = 0;
 };
 

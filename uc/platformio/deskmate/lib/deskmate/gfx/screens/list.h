@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "deskmate/input/input.h"
 #include "deskmate/gfx/screen.h"
 
 namespace deskmate {
@@ -21,13 +22,13 @@ class ListScreen : public Screen {
       selected_(0),
       top_index_(0) {}
   ~ListScreen() override;
-  void HandleInputs(const deskmate::input::InputState& input_state) override;
+  void HandleInputEvent(deskmate::input::InputEvent event) override;
   void Render(Display *display) const override;
 
  private:
   std::vector<ListItem> items_;
-  unsigned int selected_;
-  unsigned int top_index_;
+  std::size_t selected_;
+  std::size_t top_index_;
 };
 
 }  // namespace deskmate

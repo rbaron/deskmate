@@ -21,7 +21,7 @@ public:
   void Clear() override;
   void Refresh() override;
   void DrawPixel(int y, int x, bool white) override;
-  void PutText(int y, int x, const std::string& text, int size, bool white) override;
+  void PutText(int y, int x, const std::string& text, int size, bool white_fg, bool white_bg) override;
 private:
   const unsigned int height_;
   const unsigned int width_;

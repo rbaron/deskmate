@@ -33,8 +33,8 @@ void SharpMemDisplay::DrawPixel(int y, int x, bool white) {
   display_->drawPixel(x, y, white ? 1 : 0);
 }
 
-void SharpMemDisplay::PutText(int y, int x, const std::string& text, int size, bool white) {
-  display_->setTextColor(white ? 1 : 0);
+void SharpMemDisplay::PutText(int y, int x, const std::string& text, int size, bool white_fg, bool white_bg) {
+  display_->setTextColor(white_fg ? 1 : 0, white_bg ? 1 : 0);
   display_->setTextSize(size);
   display_->setCursor(x, y);
   display_->write(text.c_str());
