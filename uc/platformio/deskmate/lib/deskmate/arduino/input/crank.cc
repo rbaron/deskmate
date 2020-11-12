@@ -19,11 +19,11 @@ struct CrankPin {
   volatile int pin_value;
 };
 
-CrankPin crank_a {-1, HIGH};
-CrankPin crank_b {-1, HIGH};
+CrankPin crank_a{-1, HIGH};
+CrankPin crank_b{-1, HIGH};
 
 class State {
-public:
+ public:
   enum States {
     kInitial = 0,
     k1CW,
@@ -37,22 +37,30 @@ public:
 State::States state = State::kInitial;
 
 State::States transition_table[][4] = {
-  // 00              01                10               11
-  {  State::kInitial, State::k1CCW,    State::k1CW,     State::kInitial},  // State::kInitial
+    // 00              01                10               11
+    {State::kInitial, State::k1CCW, State::k1CW,
+     State::kInitial},  // State::kInitial
 
-  // Clockwise transitions.
-  {  State::kInitial, State::kInitial, State::k1CW,     State::k2CW},      // State::k1CW
-  {  State::kInitial, State::k3CW,     State::kInitial, State::k2CW},      // State::k2CW
-  {  State::kInitial, State::k3CW,     State::kInitial, State::kInitial},  // State::k3CW
+    // Clockwise transitions.
+    {State::kInitial, State::kInitial, State::k1CW,
+     State::k2CW},  // State::k1CW
+    {State::kInitial, State::k3CW, State::kInitial,
+     State::k2CW},  // State::k2CW
+    {State::kInitial, State::k3CW, State::kInitial,
+     State::kInitial},  // State::k3CW
 
-  // Counter-clockwise transitions.
-  {  State::kInitial, State::k1CCW,    State::kInitial, State::k2CCW},     // State::k1CCW
-  {  State::kInitial, State::kInitial, State::k3CCW,    State::k2CCW},     // State::k2CCW
-  {  State::kInitial, State::kInitial, State::k3CCW,    State::kInitial},  // State::k3CCW
+    // Counter-clockwise transitions.
+    {State::kInitial, State::k1CCW, State::kInitial,
+     State::k2CCW},  // State::k1CCW
+    {State::kInitial, State::kInitial, State::k3CCW,
+     State::k2CCW},  // State::k2CCW
+    {State::kInitial, State::kInitial, State::k3CCW,
+     State::kInitial},  // State::k3CCW
 };
 
 void HandleStateTransition() {
-  int transition = ((crank_a.pin_value == LOW) << 1 | crank_b.pin_value == LOW) & 0x3;
+  int transition =
+      ((crank_a.pin_value == LOW) << 1 | crank_b.pin_value == LOW) & 0x3;
   State::States next = transition_table[state][transition];
   if (state == State::k3CW && next == State::kInitial) {
     input_handler->HandleInputEvent(InputEvent::kCrankCW);
@@ -74,7 +82,8 @@ void ISRCrankB() {
 
 }  // namespace
 
-void SetupCrankInterruptHandler(uint8_t crank_a_pin, uint8_t crank_b_pin, InputEventHandler *handler) {
+void SetupCrankInterruptHandler(uint8_t crank_a_pin, uint8_t crank_b_pin,
+                                InputEventHandler *handler) {
   input_handler = handler;
   crank_a.pin_n = crank_a_pin;
   crank_b.pin_n = crank_b_pin;

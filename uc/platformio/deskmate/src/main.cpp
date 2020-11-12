@@ -1,19 +1,20 @@
 #include <Arduino.h>
+
 #include <string>
 #include <vector>
 
 #include "deskmate/arduino/gfx/sharp_mem_display.h"
 #include "deskmate/arduino/input/buttons.h"
 #include "deskmate/arduino/input/crank.h"
-#include "deskmate/input/input.h"
 #include "deskmate/gfx/screens/list.h"
+#include "deskmate/input/input.h"
 
 using deskmate::arduino::gfx::SharpMemDisplay;
-using deskmate::arduino::input::SetupCrankInterruptHandler;
 using deskmate::arduino::input::SetupButtonsInterruptHandler;
+using deskmate::arduino::input::SetupCrankInterruptHandler;
 using deskmate::gfx::Display;
-using deskmate::gfx::screens::ListScreen;
 using deskmate::gfx::screens::ListItem;
+using deskmate::gfx::screens::ListScreen;
 
 // Input pins.
 constexpr uint8_t kButtonAPin = 27;
@@ -32,18 +33,15 @@ constexpr uint8_t kCSPin = 15;
 constexpr unsigned int kDisplayHeight = 240;
 constexpr unsigned int kDisplayWidth = 400;
 
-Display *display = new SharpMemDisplay(kDisplayHeight, kDisplayWidth, kSCKPin, kMOSIPin, kCSPin);
+Display* display = new SharpMemDisplay(kDisplayHeight, kDisplayWidth, kSCKPin,
+                                       kMOSIPin, kCSPin);
 
 class TalkyListItem : public ListItem {
  public:
-  explicit TalkyListItem(const std::string& name): name_(name) {
-  }
-  std::string Render() const override {
-    return name_;
-  }
-  void OnSelect() override {
-    Serial.printf("%s Pressed!\n", name_.c_str());
-  }
+  explicit TalkyListItem(const std::string& name) : name_(name) {}
+  std::string Render() const override { return name_; }
+  void OnSelect() override { Serial.printf("%s Pressed!\n", name_.c_str()); }
+
  private:
   std::string name_;
 };
@@ -58,7 +56,8 @@ void setup() {
     list_items.push_back(std::make_unique<TalkyListItem>(a.c_str()));
   }
   list_screen = std::make_unique<ListScreen>(list_items);
-  SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin, kButtonCPin, list_screen.get());
+  SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin,
+                               kButtonCPin, list_screen.get());
   SetupCrankInterruptHandler(kCrankAPin, kCrankBPin, list_screen.get());
   Serial.begin(9600);
 }

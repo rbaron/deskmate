@@ -79,34 +79,32 @@ void HandleButtonPush(InputEvent event) {
 // }
 
 #define DEBOUNCED_ISR(NAME, PUSH_EVENT, RELEASE_EVENT) \
-void NAME() { \
-  static bool pushed = false; \
-  static unsigned long last_millis = 0; \
-  unsigned long now = millis(); \
-  if (now - last_millis > kDebounceMillis) { \
-    if (!pushed) { \
-      HandleButtonPush(PUSH_EVENT); \
-    } else { \
-      HandleButtonPush(RELEASE_EVENT); \
-    } \
-    pushed = !pushed; \
-  } \
-  last_millis = now; \
-}
+  void NAME() {                                        \
+    static bool pushed = false;                        \
+    static unsigned long last_millis = 0;              \
+    unsigned long now = millis();                      \
+    if (now - last_millis > kDebounceMillis) {         \
+      if (!pushed) {                                   \
+        HandleButtonPush(PUSH_EVENT);                  \
+      } else {                                         \
+        HandleButtonPush(RELEASE_EVENT);               \
+      }                                                \
+      pushed = !pushed;                                \
+    }                                                  \
+    last_millis = now;                                 \
+  }
 
-DEBOUNCED_ISR(ISRCrankButton, InputEvent::kCrankPush, InputEvent::kCrankRelease);
+DEBOUNCED_ISR(ISRCrankButton, InputEvent::kCrankPush,
+              InputEvent::kCrankRelease);
 DEBOUNCED_ISR(ISRAButton, InputEvent::kAPush, InputEvent::kARelease);
 DEBOUNCED_ISR(ISRBButton, InputEvent::kBPush, InputEvent::kBRelease);
 DEBOUNCED_ISR(ISRCButton, InputEvent::kCPush, InputEvent::kCRelease);
 
 }  // namespace
 
-void SetupButtonsInterruptHandler(
-      uint8_t crank_pin,
-      uint8_t a_pin,
-      uint8_t b_pin,
-      uint8_t c_pin,
-      deskmate::input::InputEventHandler *handler) {
+void SetupButtonsInterruptHandler(uint8_t crank_pin, uint8_t a_pin,
+                                  uint8_t b_pin, uint8_t c_pin,
+                                  deskmate::input::InputEventHandler *handler) {
   input_handler = handler;
   pinMode(crank_pin, INPUT_PULLUP);
   pinMode(a_pin, INPUT_PULLUP);
@@ -118,7 +116,6 @@ void SetupButtonsInterruptHandler(
   attachInterrupt(b_pin, ISRBButton, CHANGE);
   attachInterrupt(c_pin, ISRCButton, CHANGE);
 }
-
 
 }  // namespace input
 }  // namespace arduino

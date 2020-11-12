@@ -1,6 +1,7 @@
 #include "deskmate/gfx/screens/list.h"
 
 #include <Arduino.h>
+
 #include <algorithm>
 
 #include "deskmate/input/input.h"
@@ -15,8 +16,7 @@ using deskmate::input::InputEvent;
 
 }  // namespace
 
-ListScreen::~ListScreen() {
-}
+ListScreen::~ListScreen() {}
 
 void ListScreen::HandleInputEvent(InputEvent event) {
   switch (event) {
@@ -43,21 +43,21 @@ void ListScreen::Render(Display *display) const {
   display->Clear();
   uint8_t font_size = 2;
   uint8_t line_height = font_size * 8;
-  for (
-    size_t index = top_index_;
-    index < items_.size() && index * line_height < display->Height();
-    index++
-  ) {
+  for (size_t index = top_index_;
+       index < items_.size() && index * line_height < display->Height();
+       index++) {
     if (index == selected_) {
-      display->PutText((index - top_index_) * line_height, 0, items_[index]->Render(), font_size, true, false);
+      display->PutText((index - top_index_) * line_height, 0,
+                       items_[index]->Render(), font_size, true, false);
     } else {
-      display->PutText((index - top_index_) * line_height, 0, items_[index]->Render(), font_size, false);
+      display->PutText((index - top_index_) * line_height, 0,
+                       items_[index]->Render(), font_size, false);
     }
   }
   display->Refresh();
   dirty_ = false;
 }
 
-}  // namespace deskmate
-}  // namespace gfx
 }  // namespace screens
+}  // namespace gfx
+}  // namespace deskmate

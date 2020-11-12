@@ -1,8 +1,8 @@
 #ifndef DESKMATE_GFX_SCREEN_H
 #define DESKMATE_GFX_SCREEN_H
 
-#include "deskmate/input/input.h"
 #include "deskmate/gfx/display.h"
+#include "deskmate/input/input.h"
 
 namespace deskmate {
 namespace gfx {
@@ -14,7 +14,7 @@ class Screen : public deskmate::input::InputEventHandler {
   virtual void Render(Display *display) const = 0;
 };
 
-}  // namespace deskmate
 }  // namespace gfx
+}  // namespace deskmate
 
 #endif  // DESKMATE_GFX_SCREEN_H

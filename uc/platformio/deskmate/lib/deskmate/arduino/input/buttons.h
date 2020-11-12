@@ -9,12 +9,9 @@ namespace input {
 
 constexpr unsigned int kDebounceMillis = 5;
 
-void SetupButtonsInterruptHandler(
-      uint8_t crank_pin,
-      uint8_t a_pin,
-      uint8_t b_pin,
-      uint8_t c_pin,
-      deskmate::input::InputEventHandler *handler);
+void SetupButtonsInterruptHandler(uint8_t crank_pin, uint8_t a_pin,
+                                  uint8_t b_pin, uint8_t c_pin,
+                                  deskmate::input::InputEventHandler *handler);
 
 }  // namespace input
 }  // namespace arduino
