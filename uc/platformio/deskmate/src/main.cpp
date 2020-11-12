@@ -24,9 +24,9 @@ constexpr uint8_t kCrankBPin = 34;
 constexpr uint8_t kCrankPushPin = 32;
 
 // Display pins.
-constexpr uint8_t kSCKPin = 13;
-constexpr uint8_t kMOSIPin = 12;
-constexpr uint8_t kCSPin = 14;
+constexpr uint8_t kSCKPin = 14;
+constexpr uint8_t kMOSIPin = 13;
+constexpr uint8_t kCSPin = 15;
 
 // Display dimensions.
 constexpr unsigned int kDisplayHeight = 240;
@@ -34,28 +34,38 @@ constexpr unsigned int kDisplayWidth = 400;
 
 Display *display = new SharpMemDisplay(kDisplayHeight, kDisplayWidth, kSCKPin, kMOSIPin, kCSPin);
 
-std::vector<ListItem> list_items{
-  ListItem{"hello1"},
-  ListItem{"hello2"},
-  ListItem{"hello3"},
-  ListItem{"hello4"},
-  ListItem{"hello5"},
-  ListItem{"hello6"},
-  ListItem{"hello7"},
+class TalkyListItem : public ListItem {
+ public:
+  explicit TalkyListItem(const std::string& name): name_(name) {
+  }
+  std::string Render() const override {
+    return name_;
+  }
+  void OnSelect() override {
+    Serial.printf("%s Pressed!\n", name_.c_str());
+  }
+ private:
+  std::string name_;
 };
 
-ListScreen list_screen(list_items);
+std::unique_ptr<ListScreen> list_screen;
 
 void setup() {
-  SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin, kButtonCPin, &list_screen);
-  SetupCrankInterruptHandler(kCrankAPin, kCrankBPin, &list_screen);
+  std::vector<std::unique_ptr<ListItem>> list_items;
+  for (int i = 0; i < 15; i++) {
+    String a("item #");
+    a += String(i);
+    list_items.push_back(std::make_unique<TalkyListItem>(a.c_str()));
+  }
+  list_screen = std::make_unique<ListScreen>(list_items);
+  SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin, kButtonCPin, list_screen.get());
+  SetupCrankInterruptHandler(kCrankAPin, kCrankBPin, list_screen.get());
   Serial.begin(9600);
-  display->Clear();
-  display->Refresh();
 }
 
 void loop() {
-  list_screen.Render(display);
-  delay(50);
-  Serial.println();
+  auto before = millis();
+  list_screen->Render(display);
+  delay(10);
+  // Serial.println();
 }

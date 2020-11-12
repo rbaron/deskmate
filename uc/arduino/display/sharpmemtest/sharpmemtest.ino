@@ -20,9 +20,9 @@ All text above, must be included in any redistribution
 #include <Adafruit_SharpMem.h>
 
 // any pins can be used
-#define SHARP_SCK  13
-#define SHARP_MOSI 12
-#define SHARP_SS   14
+#define SHARP_SCK  14
+#define SHARP_MOSI 13
+#define SHARP_SS   15
 
 // Set the size of the display here, e.g. 144x168!
 //Adafruit_SharpMem display(SHARP_SCK, SHARP_MOSI, SHARP_SS, 144, 168);
@@ -45,6 +45,23 @@ void setup(void)
   // start & clear the display
   display.begin();
   display.clearDisplay();
+
+  // This flickers, since clearDisplay erases the actual
+  // display's vram.
+  for(int i = 0; i < 50; i++) {
+    display.clearDisplay();
+    testdrawstrings("Flicker!");
+    delay(100);
+  }
+  
+  // This does not flicker, since clearDisplayBuffer erases
+  // the in-RAM buffer. The call to display.refresh() will
+  // flush the in-RAM buffer to the display via SPI anyway.
+  for(int i = 0; i < 50; i++) {
+    display.clearDisplayBuffer();
+    testdrawstrings("No flicker!");
+    delay(100);
+  }
 
   // Several shapes are drawn centered on the screen.  Calculate 1/2 of
   // lesser of display width or height, this is used repeatedly later.
@@ -238,6 +255,18 @@ void testdrawchar(void) {
   for (int i=0; i < 256; i++) {
     if (i == '\n') continue;
     display.write(i);
+  }
+  display.refresh();
+}
+
+void testdrawstrings(const char *line) {
+  display.setTextSize(2);
+  display.setTextColor(BLACK);
+  display.cp437(true);
+  int lineheight = 2 * 8;
+  for (int i=0; i < 15; i++) {
+    display.setCursor(0, i * lineheight);
+    display.print(line);
   }
   display.refresh();
 }

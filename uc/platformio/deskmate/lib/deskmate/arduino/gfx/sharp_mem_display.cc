@@ -22,7 +22,13 @@ SharpMemDisplay::~SharpMemDisplay() {
 }
 
 void SharpMemDisplay::Clear() {
-  display_->clearDisplay();
+  // Clears the actual display's content, via SPI.
+  // display_->clearDisplay();
+
+  // Clears the content of the in-RAM buffer. Since the RAM buffer
+  // will be flushed to the display via SPI with the Refresh() call,
+  // omiting this round-trip saves us from flickering.
+  display_->clearDisplayBuffer();
 }
 
 void SharpMemDisplay::Refresh() {

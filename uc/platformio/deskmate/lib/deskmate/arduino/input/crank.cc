@@ -54,12 +54,9 @@ State::States transition_table[][4] = {
 void HandleStateTransition() {
   int transition = ((crank_a.pin_value == LOW) << 1 | crank_b.pin_value == LOW) & 0x3;
   State::States next = transition_table[state][transition];
-  // Serial.printf("%d%d %d -> %d\n", crank_a.pin_value == LOW, crank_b.pin_value == LOW, state, next);
   if (state == State::k3CW && next == State::kInitial) {
-    // Serial.println("1 CW turn!");
     input_handler->HandleInputEvent(InputEvent::kCrankCW);
   } else if (state == State::k3CCW && next == State::kInitial) {
-    // Serial.println("1 CCW turn!");
     input_handler->HandleInputEvent(InputEvent::kCrankCCW);
   }
   state = next;
