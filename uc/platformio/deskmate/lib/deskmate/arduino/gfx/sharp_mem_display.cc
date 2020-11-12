@@ -9,6 +9,16 @@ namespace deskmate {
 namespace arduino {
 namespace gfx {
 
+namespace {
+
+using deskmate::gfx::Color;
+
+constexpr int ColorToInt(Color color) {
+  return color == Color::kBlack ? 0 : 1;
+}
+
+}  // namespace
+
 SharpMemDisplay::SharpMemDisplay(unsigned int height, unsigned int width,
                                  uint8_t sck_pin, uint8_t mosi_pin,
                                  uint8_t cs_pin)
@@ -35,13 +45,13 @@ void SharpMemDisplay::Clear() {
 
 void SharpMemDisplay::Refresh() { display_->refresh(); }
 
-void SharpMemDisplay::DrawPixel(int y, int x, bool white) {
-  display_->drawPixel(x, y, white ? 1 : 0);
+void SharpMemDisplay::DrawPixel(int y, int x, Color color) {
+  display_->drawPixel(x, y, ColorToInt(color));
 }
 
 void SharpMemDisplay::PutText(int y, int x, const std::string& text, int size,
-                              bool white_fg, bool white_bg) {
-  display_->setTextColor(white_fg ? 1 : 0, white_bg ? 1 : 0);
+                              Color fg, Color bg) {
+  display_->setTextColor(ColorToInt(fg), ColorToInt(bg));
   display_->setTextSize(size);
   display_->setCursor(x, y);
   display_->write(text.c_str());

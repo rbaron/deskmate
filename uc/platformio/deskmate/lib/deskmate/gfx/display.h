@@ -6,6 +6,11 @@
 namespace deskmate {
 namespace gfx {
 
+enum class Color {
+  kBlack,
+  kWhite,
+};
+
 class Display {
  public:
   virtual ~Display() = default;
@@ -13,11 +18,11 @@ class Display {
   virtual unsigned int Width() = 0;
   virtual void Clear() = 0;
   virtual void Refresh() = 0;
-  virtual void DrawPixel(int y, int x, bool white) = 0;
+  virtual void DrawPixel(int y, int x, Color color) = 0;
   virtual void PutText(int y, int x, const std::string& text, int size,
-                       bool white_fg, bool white_bg) = 0;
-  void PutText(int y, int x, const std::string& text, int size, bool white) {
-    return PutText(y, x, text, size, /*white_fg=*/white, /*white_bg=*/false);
+                       Color fg, Color bg) = 0;
+  void PutText(int y, int x, const std::string& text, int size, Color fg) {
+    return PutText(y, x, text, size, fg, Color::kWhite);
   };
 };
 

@@ -4,6 +4,7 @@
 
 #include <algorithm>
 
+#include "deskmate/gfx/display.h"
 #include "deskmate/input/input.h"
 
 namespace deskmate {
@@ -12,6 +13,7 @@ namespace screens {
 
 namespace {
 
+using deskmate::gfx::Color;
 using deskmate::input::InputEvent;
 
 }  // namespace
@@ -48,10 +50,12 @@ void ListScreen::Render(Display *display) const {
        index++) {
     if (index == selected_) {
       display->PutText((index - top_index_) * line_height, 0,
-                       items_[index]->Render(), font_size, true, false);
+                       items_[index]->Render(), font_size, Color::kWhite,
+                       Color::kBlack);
     } else {
       display->PutText((index - top_index_) * line_height, 0,
-                       items_[index]->Render(), font_size, false);
+                       items_[index]->Render(), font_size, Color::kBlack,
+                       Color::kWhite);
     }
   }
   display->Refresh();
