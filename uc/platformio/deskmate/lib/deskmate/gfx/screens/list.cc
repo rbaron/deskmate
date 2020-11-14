@@ -39,9 +39,9 @@ void ListScreen::HandleInputEvent(InputEvent event) {
 }
 
 void ListScreen::Render(Display *display) const {
-  if (!dirty_) {
-    return;
-  }
+  // if (!dirty_) {
+  //   return;
+  // }
   display->Clear();
   uint8_t font_size = 2;
   uint8_t line_height = font_size * 8;

@@ -19,14 +19,16 @@ class ListItem {
 
 class ListScreen : public Screen {
  public:
-  explicit ListScreen(std::vector<std::unique_ptr<ListItem>>& items)
+  // ListScreen is constructed with a vector of non-owned pointers
+  // to ListItems.
+  explicit ListScreen(std::vector<ListItem*>& items)
       : items_(std::move(items)), selected_(0), top_index_(0) {}
   ~ListScreen() override;
   void HandleInputEvent(deskmate::input::InputEvent event) override;
   void Render(Display* display) const override;
 
  private:
-  std::vector<std::unique_ptr<ListItem>> items_;
+  std::vector<ListItem*> items_;
   std::size_t selected_;
   std::size_t top_index_;
 
