@@ -43,18 +43,18 @@ void ListScreen::Render(Display *display) const {
   //   return;
   // }
   display->Clear();
-  uint8_t font_size = 2;
-  uint8_t line_height = font_size * 8;
+  uint8_t font_scale = 2;
+  uint8_t line_height = font_scale * display->GetCharSize().height;
   for (size_t index = top_index_;
-       index < items_.size() && index * line_height < display->Height();
+       index < items_.size() && index * line_height < display->GetSize().height;
        index++) {
     if (index == selected_) {
       display->PutText((index - top_index_) * line_height, 0,
-                       items_[index]->Render(), font_size, Color::kWhite,
+                       items_[index]->Render(), font_scale, Color::kWhite,
                        Color::kBlack);
     } else {
       display->PutText((index - top_index_) * line_height, 0,
-                       items_[index]->Render(), font_size, Color::kBlack,
+                       items_[index]->Render(), font_scale, Color::kBlack,
                        Color::kWhite);
     }
   }

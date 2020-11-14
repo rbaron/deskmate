@@ -12,10 +12,9 @@ namespace gfx {
 namespace {
 
 using deskmate::gfx::Color;
+using deskmate::gfx::Size;
 
-constexpr int ColorToInt(Color color) {
-  return color == Color::kBlack ? 0 : 1;
-}
+constexpr int ColorToInt(Color color) { return color == Color::kBlack ? 0 : 1; }
 
 }  // namespace
 
@@ -49,10 +48,10 @@ void SharpMemDisplay::DrawPixel(int y, int x, Color color) {
   display_->drawPixel(x, y, ColorToInt(color));
 }
 
-void SharpMemDisplay::PutText(int y, int x, const std::string& text, int size,
+void SharpMemDisplay::PutText(int y, int x, const std::string& text, int scale,
                               Color fg, Color bg) {
   display_->setTextColor(ColorToInt(fg), ColorToInt(bg));
-  display_->setTextSize(size);
+  display_->setTextSize(scale);
   display_->setCursor(x, y);
   display_->write(text.c_str());
 }

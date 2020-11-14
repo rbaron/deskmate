@@ -15,6 +15,10 @@ namespace gfx {
 namespace {
 
 using deskmate::gfx::Color;
+using deskmate::gfx::Size;
+
+constexpr unsigned int kCharHeight = 8;
+constexpr unsigned int kCharWidth = 6;
 
 }  // namespace
 
@@ -22,13 +26,15 @@ class SharpMemDisplay : public deskmate::gfx::Display {
  public:
   SharpMemDisplay(unsigned int height, unsigned int width, uint8_t sck_pin,
                   uint8_t mosi_pin, uint8_t cs_pin);
-  unsigned int Height() { return height_; }
-  unsigned int Width() { return width_; }
-  virtual ~SharpMemDisplay() override;
+  ~SharpMemDisplay() override;
+
+  Size GetSize() const override { return {height_, width_}; };
+  Size GetCharSize() const override { return {kCharHeight, kCharWidth}; };
+
   void Clear() override;
   void Refresh() override;
   void DrawPixel(int y, int x, Color color) override;
-  void PutText(int y, int x, const std::string& text, int size, Color fg,
+  void PutText(int y, int x, const std::string& text, int scale, Color fg,
                Color bg) override;
 
  private:
