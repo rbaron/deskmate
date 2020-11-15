@@ -5,3 +5,6 @@
 .vscode/ipch
 
 src/credentials.h
+
+# CMake build for sdl2.
+build
