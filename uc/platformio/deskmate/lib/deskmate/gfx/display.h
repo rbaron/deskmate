@@ -44,7 +44,7 @@ class Display {
 
   // Get the display size in pixels. This might be the "apparent" size (based on
   // the sub-windowss that have been pushed via PushWindow).
-  Size GetSize() const;
+  const Size& GetSize() const;
 
   // Returns the Size of a single char. For now we assume monospace fonts.
   virtual Size GetCharSize() const = 0;

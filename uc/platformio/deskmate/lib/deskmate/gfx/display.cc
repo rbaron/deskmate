@@ -29,7 +29,7 @@ void Display::PushWindow(const Rect& window) {
 // TODO: die with a nice message if this is empty.
 void Display::PopWindow() { windows_stack_.pop(); }
 
-Size Display::GetSize() const { return windows_stack_.top().size; }
+const Size& Display::GetSize() const { return windows_stack_.top().size; }
 
 void Display::DrawPixel(int y, int x, Color color) {
   const Rect& window = windows_stack_.top();

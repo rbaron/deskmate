@@ -135,7 +135,7 @@ void setup() {
 }
 
 void loop() {
-  auto before = millis();
+  // auto before = millis();
 
   wifi_manager.MaybeReconnect();
 
@@ -153,9 +153,6 @@ void loop() {
   }
 
   display->Clear();
-  // display->SetWindow({{10, 200}, {200, 200}});
-  // display->SetWindow({{0, 0}, {200, 200}});
-  // list_screen_left->Render(display);
   window->Render(display);
   display->Refresh();
   delay(10);

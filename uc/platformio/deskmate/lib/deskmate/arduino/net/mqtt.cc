@@ -47,7 +47,6 @@ bool MQTTManager::Process() {
     pubsub_client_->loop();
   }
 
-  // TODO: Better error handling.
   while (!out_queue_.empty()) {
     const MQTTMessage& msg = out_queue_.front();
     Serial.printf("Will send message %s -> %s\n", msg.topic.c_str(),

@@ -19,8 +19,16 @@ class TextListItem : public ListItem {
       : display_name_(display_name) {}
 
   void Render(Display* display, bool is_selected) const override {
-    const std::string text = (is_selected ? " -> " : "" ) + display_name_;
-    display->PutText(0, 0, text, 2, Color::kBlack);
+    const unsigned int char_scale = 2;
+    const Size& size = display->GetSize();
+    const Size& char_size = display->GetCharSize();
+    std::string text = display_name_;
+    if (text.length() * char_scale * char_size.width > size.width) {
+      text = text.substr(0, size.width / (char_scale * char_size.width) - 1);
+      text += ".";
+    }
+    display->PutText(0, 0, text, char_scale, is_selected ? Color::kWhite : Color::kBlack,
+                     is_selected ? Color::kBlack : Color::kWhite);
   }
 
   // Do nothing.

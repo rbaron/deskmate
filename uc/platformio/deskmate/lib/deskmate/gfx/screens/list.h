@@ -14,7 +14,7 @@ namespace screens {
 
 class ListItem {
  public:
-  virtual void Render(Display *display, bool is_selected) const = 0;
+  virtual void Render(Display* display, bool is_selected) const = 0;
   virtual void OnSelect() = 0;
 };
 
