@@ -35,6 +35,9 @@ bool MQTTManager::Subscribe(const std::string& topic) {
 
 bool MQTTManager::Process() {
   if (!pubsub_client_->connected()) {
+    // TODO: apparently when reconnecting we loose the subscriptions?
+    // I think we need to re-subscribe. This is done in this example:
+    // https://github.com/knolleary/pubsubclient/blob/master/examples/mqtt_reconnect_nonblocking/mqtt_reconnect_nonblocking.ino
     Serial.println("MQTTManager is not connected. Connecting.");
     Connect();
   } else {

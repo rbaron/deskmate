@@ -33,7 +33,6 @@ class MQTTListItem : public ListItem, public MQTTSubscriber {
   }
 
   void OnSelect() override {
-    // Serial.printf("%s Pressed!\n", display_name_.c_str());
     mqtt_out_queue_->push({command_topic_, on_ ? "OFF" : "ON"});
   }
 

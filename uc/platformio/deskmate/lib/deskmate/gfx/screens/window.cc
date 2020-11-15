@@ -13,34 +13,68 @@ namespace screens {
 
 namespace {
 using deskmate::gfx::Color;
+using deskmate::gfx::Rect;
 using deskmate::input::InputEvent;
+
+// Padding inside WindowedScreens.
+constexpr unsigned int kPadding = 2;
+
+// TODO: use a circular linked list and get rid of this questionable
+// implementation.
+int FindNextFocusableIndex(const std::vector<WindowedScreen> wss,
+                           int currently_focused) {
+  // After.
+  for (int i = currently_focused + 1; i < wss.size(); i++) {
+    if (wss[i].focusable) {
+      return i;
+    }
+  }
+  // Before.
+  for (int i = 0; i < currently_focused; i++) {
+    if (wss[i].focusable) {
+      return i;
+    }
+  }
+  // No other focusable WindowedScreen was found.
+  return currently_focused;
+}
+
 }  // namespace
+
+Window::Window(std::vector<WindowedScreen>& windowed_screens)
+    : windowed_screens_(windowed_screens),
+      focused_index_(FindNextFocusableIndex(windowed_screens_, -1)) {}
 
 Window::~Window() {}
 
+template <typename E>
+constexpr typename std::underlying_type<E>::type to_underlying(E e) noexcept {
+    return static_cast<typename std::underlying_type<E>::type>(e);
+}
+
 void Window::HandleInputEvent(InputEvent event) {
-  // TODO: forward key presses to focused screen.
-  // switch (event) {
-  //   case InputEvent::kCrankCW:
-  //     selected_ = selected_ < items_.size() - 1 ? selected_ + 1 : selected_;
-  //     dirty_ = true;
-  //     break;
-  //   case InputEvent::kCrankCCW:
-  //     selected_ = selected_ > 0 ? selected_ - 1 : 0;
-  //     dirty_ = true;
-  //     break;
-  //   case InputEvent::kAPush:
-  //     items_[selected_]->OnSelect();
-  //     break;
-  //   default:
-  //     break;
-  // }
+  switch (event) {
+    // Pressing B cycles through focusable windows.
+    case InputEvent::kBPush:
+      focused_index_ = FindNextFocusableIndex(windowed_screens_, focused_index_);
+      break;
+    // Forward all other inputs to the focused WindowedScreen (if any).
+    default:
+      if (focused_index_ >= 0) {
+        windowed_screens_[focused_index_].screen->HandleInputEvent(event);
+      }
+      break;
+  }
 }
 
 void Window::Render(Display* display) const {
   for (const WindowedScreen& ws : windowed_screens_) {
-    Serial.printf("Will render -> (%ud, %ud)\n", ws.window.point.y, ws.window.point.x);
-    display->SetWindow(ws.window);
+    const Rect& w = ws.window;
+    Rect padded_window = {
+     Point{w.point.y + kPadding, w.point.x + kPadding},
+     Size{w.size.height - kPadding, w.size.width - kPadding},
+    };
+    display->SetWindow(padded_window);
     ws.screen->Render(display);
   }
 }

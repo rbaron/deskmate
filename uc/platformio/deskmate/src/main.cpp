@@ -13,6 +13,7 @@
 #include "deskmate/arduino/net/mqtt.h"
 #include "deskmate/arduino/net/wifi.h"
 #include "deskmate/gfx/components/mqtt_list_item.h"
+#include "deskmate/gfx/components/text_list_item.h"
 #include "deskmate/gfx/screens/list.h"
 #include "deskmate/gfx/screens/window.h"
 #include "deskmate/input/input.h"
@@ -26,6 +27,7 @@ using deskmate::arduino::net::WiFiManager;
 using deskmate::gfx::Color;
 using deskmate::gfx::Display;
 using deskmate::gfx::components::MQTTListItem;
+using deskmate::gfx::components::TextListItem;
 using deskmate::gfx::screens::ListItem;
 using deskmate::gfx::screens::ListScreen;
 using deskmate::gfx::screens::Window;
@@ -65,12 +67,16 @@ Display* display = new SharpMemDisplay(kDisplayHeight, kDisplayWidth, kSCKPin,
 // These weird global unique_ptrs are so we can get around the setup/loop
 // Arduino thing. In practice I'd make these local to main(). Maybe we can do
 // that here?
-std::unique_ptr<ListScreen> list_screen;
+std::unique_ptr<ListScreen> list_screen_left;
 std::vector<std::unique_ptr<MQTTListItem>> mqtt_list_items;
+
+std::unique_ptr<ListScreen> list_screen_right;
+std::vector<std::unique_ptr<TextListItem>> text_list_items;
 
 std::unique_ptr<Window> window;
 
 void setup() {
+  // Populate list_screen_left.
   for (const auto& cfg : deskmate::credentials::kMQTTConfigs) {
     mqtt_list_items.push_back(std::make_unique<MQTTListItem>(
         cfg.display_name, cfg.command_topic, cfg.state_topic,
@@ -81,17 +87,32 @@ void setup() {
   for (const auto& list_item : mqtt_list_items) {
     item_ptrs.push_back(list_item.get());
   }
-  list_screen = std::make_unique<ListScreen>(item_ptrs);
+  list_screen_left = std::make_unique<ListScreen>(item_ptrs);
+
+  // Populate list_screen_left.
+  for (int i = 0; i < 10; i++) {
+    text_list_items.push_back(std::make_unique<TextListItem>(
+        "Hello " + std::string(String(i).c_str())));
+  }
+  std::vector<ListItem*> right_item_ptrs;
+  for (const auto& list_item : text_list_items) {
+    right_item_ptrs.push_back(list_item.get());
+  }
+  list_screen_right = std::make_unique<ListScreen>(right_item_ptrs);
 
   std::vector<WindowedScreen> windowed_screens = {
-      {list_screen.get(), {{0, 0}, {display->GetSize().height, 200}}},
-      {list_screen.get(), {{0, 200}, {display->GetSize().height, display->GetSize().width - 200}}},
+      {list_screen_left.get(),
+       {{0, 0}, {display->GetSize().height, 200}},
+       true},
+      {list_screen_right.get(),
+       {{0, 200}, {display->GetSize().height, display->GetSize().width - 200}},
+       true},
   };
   window = std::make_unique<Window>(windowed_screens);
 
   SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin,
-                               kButtonCPin, list_screen.get());
-  SetupCrankInterruptHandler(kCrankAPin, kCrankBPin, list_screen.get());
+                               kButtonCPin, window.get());
+  SetupCrankInterruptHandler(kCrankAPin, kCrankBPin, window.get());
 
   Serial.begin(9600);
 
@@ -134,7 +155,7 @@ void loop() {
   display->Clear();
   // display->SetWindow({{10, 200}, {200, 200}});
   // display->SetWindow({{0, 0}, {200, 200}});
-  // list_screen->Render(display);
+  // list_screen_left->Render(display);
   window->Render(display);
   display->Refresh();
   delay(10);
