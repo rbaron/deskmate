@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "deskmate/gfx/display.h"
 #include "deskmate/gfx/screen.h"
 #include "deskmate/input/input.h"
 
@@ -13,7 +14,7 @@ namespace screens {
 
 class ListItem {
  public:
-  virtual std::string Render() const = 0;
+  virtual void Render(Display *display, bool is_selected) const = 0;
   virtual void OnSelect() = 0;
 };
 

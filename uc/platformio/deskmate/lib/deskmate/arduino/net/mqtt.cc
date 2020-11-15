@@ -56,6 +56,7 @@ bool MQTTManager::Process() {
       Serial.println("Sent!");
     } else {
       Serial.println("Failed!");
+      return false;
     }
     out_queue_.pop();
   }

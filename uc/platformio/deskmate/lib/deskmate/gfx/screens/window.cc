@@ -70,8 +70,9 @@ void Window::Render(Display* display) const {
         Point{w.point.y + kPadding, w.point.x + kPadding},
         Size{w.size.height - kPadding, w.size.width - kPadding},
     };
-    display->SetWindow(padded_window);
+    display->PushWindow(padded_window);
     ws.screen->Render(display);
+    display->PopWindow();
   }
 }
 

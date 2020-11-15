@@ -18,7 +18,10 @@ class TextListItem : public ListItem {
   explicit TextListItem(const std::string& display_name)
       : display_name_(display_name) {}
 
-  std::string Render() const override { return display_name_; }
+  void Render(Display* display, bool is_selected) const override {
+    const std::string text = (is_selected ? " -> " : "" ) + display_name_;
+    display->PutText(0, 0, text, 2, Color::kBlack);
+  }
 
   // Do nothing.
   void OnSelect() override {}

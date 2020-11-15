@@ -12,10 +12,9 @@ namespace gfx {
 namespace screens {
 
 namespace {
-
 using deskmate::gfx::Color;
+using deskmate::gfx::Rect;
 using deskmate::input::InputEvent;
-
 }  // namespace
 
 ListScreen::~ListScreen() {}
@@ -39,18 +38,14 @@ void ListScreen::HandleInputEvent(InputEvent event) {
 void ListScreen::Render(Display *display) const {
   uint8_t font_scale = 2;
   uint8_t line_height = font_scale * display->GetCharSize().height;
+  const Size& window_size = display->GetSize();
   for (size_t index = top_index_;
        index < items_.size() && index * line_height < display->GetSize().height;
        index++) {
-    if (index == selected_) {
-      display->PutText((index - top_index_) * line_height, 0,
-                       items_[index]->Render(), font_scale, Color::kWhite,
-                       Color::kBlack);
-    } else {
-      display->PutText((index - top_index_) * line_height, 0,
-                       items_[index]->Render(), font_scale, Color::kBlack,
-                       Color::kWhite);
-    }
+    Rect item_window{Point{(index - top_index_) * line_height, 0}, {line_height, window_size.width}};
+    display->PushWindow(item_window);
+    items_[index]->Render(display, index == selected_);
+    display->PopWindow();
   }
 }
 

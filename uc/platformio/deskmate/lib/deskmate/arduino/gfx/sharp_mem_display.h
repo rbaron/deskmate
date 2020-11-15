@@ -4,6 +4,7 @@
 #include <Adafruit_SharpMem.h>
 
 #include <memory>
+#include <stack>
 #include <string>
 
 #include "deskmate/gfx/display.h"
@@ -30,24 +31,18 @@ class SharpMemDisplay : public deskmate::gfx::Display {
                   uint8_t mosi_pin, uint8_t cs_pin);
   ~SharpMemDisplay() override;
 
-  Size GetSize() const override { return window_.size; };
   Size GetCharSize() const override { return {kCharHeight, kCharWidth}; };
-
-  void SetWindow(const Rect& rect) {
-    window_ = rect;
-  }
 
   void Clear() override;
   void Refresh() override;
-  void DrawPixel(int y, int x, Color color) override;
-  void PutText(int y, int x, const std::string& text, int scale, Color fg,
-               Color bg) override;
 
  private:
-  const unsigned int height_;
-  const unsigned int width_;
+  void DrawPixelAbsolute(int y, int x, Color color) override;
+
+  void PutTextAbsolute(int y, int x, const std::string& text, int scale,
+                       Color fg, Color bg) override;
+
   std::unique_ptr<Adafruit_SharpMem> display_;
-  Rect window_;
 };
 
 }  // namespace gfx

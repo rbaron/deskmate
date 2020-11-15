@@ -12,6 +12,7 @@ namespace gfx {
 namespace {
 
 using deskmate::gfx::Color;
+using deskmate::gfx::Rect;
 using deskmate::gfx::Size;
 
 constexpr int ColorToInt(Color color) { return color == Color::kBlack ? 0 : 1; }
@@ -21,11 +22,9 @@ constexpr int ColorToInt(Color color) { return color == Color::kBlack ? 0 : 1; }
 SharpMemDisplay::SharpMemDisplay(unsigned int height, unsigned int width,
                                  uint8_t sck_pin, uint8_t mosi_pin,
                                  uint8_t cs_pin)
-    : height_(height),
-      width_(width),
+    : Display(height, width),
       display_(std::make_unique<Adafruit_SharpMem>(sck_pin, mosi_pin, cs_pin,
-                                                   width, height)),
-      window_({Point{0, 0}, Size{height, width}}) {
+                                                   width, height)) {
   display_->begin();
   display_->clearDisplay();
   display_->cp437(true);
@@ -45,15 +44,15 @@ void SharpMemDisplay::Clear() {
 
 void SharpMemDisplay::Refresh() { display_->refresh(); }
 
-void SharpMemDisplay::DrawPixel(int y, int x, Color color) {
-  display_->drawPixel(x + window_.point.x, y + window_.point.y, ColorToInt(color));
+void SharpMemDisplay::DrawPixelAbsolute(int y, int x, Color color) {
+  display_->drawPixel(x, y, ColorToInt(color));
 }
 
-void SharpMemDisplay::PutText(int y, int x, const std::string& text, int scale,
-                              Color fg, Color bg) {
+void SharpMemDisplay::PutTextAbsolute(int y, int x, const std::string& text,
+                                      int scale, Color fg, Color bg) {
   display_->setTextColor(ColorToInt(fg), ColorToInt(bg));
   display_->setTextSize(scale);
-  display_->setCursor(x + window_.point.x, y + window_.point.y);
+  display_->setCursor(x, y);
   display_->write(text.c_str());
 }
 
