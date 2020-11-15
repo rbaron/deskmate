@@ -14,6 +14,7 @@
 #include "deskmate/arduino/net/wifi.h"
 #include "deskmate/gfx/components/mqtt_list_item.h"
 #include "deskmate/gfx/screens/list.h"
+#include "deskmate/gfx/screens/window.h"
 #include "deskmate/input/input.h"
 #include "deskmate/mqtt/mqtt.h"
 
@@ -27,6 +28,8 @@ using deskmate::gfx::Display;
 using deskmate::gfx::components::MQTTListItem;
 using deskmate::gfx::screens::ListItem;
 using deskmate::gfx::screens::ListScreen;
+using deskmate::gfx::screens::Window;
+using deskmate::gfx::screens::WindowedScreen;
 using deskmate::mqtt::MQTTMessage;
 using deskmate::mqtt::MQTTSubscriber;
 
@@ -59,8 +62,13 @@ MQTTManager mqtt_manager(deskmate::credentials::kMQTTServer,
 Display* display = new SharpMemDisplay(kDisplayHeight, kDisplayWidth, kSCKPin,
                                        kMOSIPin, kCSPin);
 
+// These weird global unique_ptrs are so we can get around the setup/loop
+// Arduino thing. In practice I'd make these local to main(). Maybe we can do
+// that here?
 std::unique_ptr<ListScreen> list_screen;
 std::vector<std::unique_ptr<MQTTListItem>> mqtt_list_items;
+
+std::unique_ptr<Window> window;
 
 void setup() {
   for (const auto& cfg : deskmate::credentials::kMQTTConfigs) {
@@ -74,6 +82,12 @@ void setup() {
     item_ptrs.push_back(list_item.get());
   }
   list_screen = std::make_unique<ListScreen>(item_ptrs);
+
+  std::vector<WindowedScreen> windowed_screens = {
+      {list_screen.get(), {{0, 0}, {display->GetSize().height, 200}}},
+      {list_screen.get(), {{0, 200}, {display->GetSize().height, display->GetSize().width - 200}}},
+  };
+  window = std::make_unique<Window>(windowed_screens);
 
   SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin,
                                kButtonCPin, list_screen.get());
@@ -117,7 +131,12 @@ void loop() {
     mqtt_in_queue->pop();
   }
 
-  list_screen->Render(display);
+  display->Clear();
+  // display->SetWindow({{10, 200}, {200, 200}});
+  // display->SetWindow({{0, 0}, {200, 200}});
+  // list_screen->Render(display);
+  window->Render(display);
+  display->Refresh();
   delay(10);
   // Serial.println();
 }

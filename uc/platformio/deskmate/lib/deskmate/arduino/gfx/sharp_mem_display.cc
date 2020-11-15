@@ -24,7 +24,8 @@ SharpMemDisplay::SharpMemDisplay(unsigned int height, unsigned int width,
     : height_(height),
       width_(width),
       display_(std::make_unique<Adafruit_SharpMem>(sck_pin, mosi_pin, cs_pin,
-                                                   width, height)) {
+                                                   width, height)),
+      window_({Point{0, 0}, Size{height, width}}) {
   display_->begin();
   display_->clearDisplay();
   display_->cp437(true);
@@ -45,14 +46,14 @@ void SharpMemDisplay::Clear() {
 void SharpMemDisplay::Refresh() { display_->refresh(); }
 
 void SharpMemDisplay::DrawPixel(int y, int x, Color color) {
-  display_->drawPixel(x, y, ColorToInt(color));
+  display_->drawPixel(x + window_.point.x, y + window_.point.y, ColorToInt(color));
 }
 
 void SharpMemDisplay::PutText(int y, int x, const std::string& text, int scale,
                               Color fg, Color bg) {
   display_->setTextColor(ColorToInt(fg), ColorToInt(bg));
   display_->setTextSize(scale);
-  display_->setCursor(x, y);
+  display_->setCursor(x + window_.point.x, y + window_.point.y);
   display_->write(text.c_str());
 }
 

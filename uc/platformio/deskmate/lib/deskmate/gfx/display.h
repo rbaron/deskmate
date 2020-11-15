@@ -11,9 +11,20 @@ enum class Color {
   kWhite,
 };
 
+struct Point {
+  unsigned int y;
+  unsigned int x;
+};
+
 struct Size {
   unsigned int height;
   unsigned int width;
+};
+
+struct Rect {
+  // Upper left corner.
+  Point point;
+  Size size;
 };
 
 class Display {
@@ -23,6 +34,10 @@ class Display {
   virtual Size GetSize() const = 0;
   // Returns the Size of a single char. For now we assume monospace fonts.
   virtual Size GetCharSize() const = 0;
+
+  // Changes the "apparent" drawable area.
+  virtual void SetWindow(const Rect& window) = 0;
+
   virtual void Clear() = 0;
   virtual void Refresh() = 0;
   virtual void DrawPixel(int y, int x, Color color) = 0;

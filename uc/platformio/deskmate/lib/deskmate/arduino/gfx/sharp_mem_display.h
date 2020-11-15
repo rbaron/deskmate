@@ -15,6 +15,8 @@ namespace gfx {
 namespace {
 
 using deskmate::gfx::Color;
+using deskmate::gfx::Point;
+using deskmate::gfx::Rect;
 using deskmate::gfx::Size;
 
 constexpr unsigned int kCharHeight = 8;
@@ -28,8 +30,12 @@ class SharpMemDisplay : public deskmate::gfx::Display {
                   uint8_t mosi_pin, uint8_t cs_pin);
   ~SharpMemDisplay() override;
 
-  Size GetSize() const override { return {height_, width_}; };
+  Size GetSize() const override { return window_.size; };
   Size GetCharSize() const override { return {kCharHeight, kCharWidth}; };
+
+  void SetWindow(const Rect& rect) {
+    window_ = rect;
+  }
 
   void Clear() override;
   void Refresh() override;
@@ -41,6 +47,7 @@ class SharpMemDisplay : public deskmate::gfx::Display {
   const unsigned int height_;
   const unsigned int width_;
   std::unique_ptr<Adafruit_SharpMem> display_;
+  Rect window_;
 };
 
 }  // namespace gfx

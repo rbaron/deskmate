@@ -31,11 +31,6 @@ class ListScreen : public Screen {
   std::vector<ListItem*> items_;
   std::size_t selected_;
   std::size_t top_index_;
-
-  // Whether or not we should re-render the screen. It's marked mutable
-  // because it's an optimization, and const member functions are allowed
-  // to modify it.
-  mutable bool dirty_ = true;
 };
 
 }  // namespace screens
