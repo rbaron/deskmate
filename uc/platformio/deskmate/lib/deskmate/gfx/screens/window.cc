@@ -47,16 +47,12 @@ Window::Window(std::vector<WindowedScreen>& windowed_screens)
 
 Window::~Window() {}
 
-template <typename E>
-constexpr typename std::underlying_type<E>::type to_underlying(E e) noexcept {
-    return static_cast<typename std::underlying_type<E>::type>(e);
-}
-
 void Window::HandleInputEvent(InputEvent event) {
   switch (event) {
     // Pressing B cycles through focusable windows.
     case InputEvent::kBPush:
-      focused_index_ = FindNextFocusableIndex(windowed_screens_, focused_index_);
+      focused_index_ =
+          FindNextFocusableIndex(windowed_screens_, focused_index_);
       break;
     // Forward all other inputs to the focused WindowedScreen (if any).
     default:
@@ -71,8 +67,8 @@ void Window::Render(Display* display) const {
   for (const WindowedScreen& ws : windowed_screens_) {
     const Rect& w = ws.window;
     Rect padded_window = {
-     Point{w.point.y + kPadding, w.point.x + kPadding},
-     Size{w.size.height - kPadding, w.size.width - kPadding},
+        Point{w.point.y + kPadding, w.point.x + kPadding},
+        Size{w.size.height - kPadding, w.size.width - kPadding},
     };
     display->SetWindow(padded_window);
     ws.screen->Render(display);

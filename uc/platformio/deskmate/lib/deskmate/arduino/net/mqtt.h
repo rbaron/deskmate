@@ -44,6 +44,10 @@ class MQTTManager : public MQTTMessageBuffer {
   MQTTMessageQueue out_queue_;
   WiFiClient wifi_client_;
   std::unique_ptr<PubSubClient> pubsub_client_;
+
+  // Stores subscribed topics so we can re-subscribe upon reconnection, if the
+  // connection drop.
+  std::vector<std::string> subscribed_topics_;
 };
 
 }  // namespace net
