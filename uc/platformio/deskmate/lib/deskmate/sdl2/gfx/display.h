@@ -1,8 +1,8 @@
 #ifndef DESKMATE_SDL_GFX_DISPLAY_H
 #define DESKMATE_SDL_GFX_DISPLAY_H
 
-#include <SDL.h>
-
+#include "SDL.h"
+#include "SDL_ttf.h"
 #include "deskmate/gfx/display.h"
 
 namespace deskmate {
@@ -18,8 +18,24 @@ constexpr unsigned int kCharHeight = 8;
 constexpr unsigned int kCharWidth = 6;
 }  // namespace
 
+struct SDLRendererDeleter {
+  void operator()(SDL_Renderer* renderer) { SDL_DestroyRenderer(renderer); }
+};
+
 struct SDLWindowDeleter {
   void operator()(SDL_Window* window) { SDL_DestroyWindow(window); }
+};
+
+struct SDLTextureDeleter {
+  void operator()(SDL_Texture* texture) { SDL_DestroyTexture(texture); }
+};
+
+struct SDLSurfaceDeleter {
+  void operator()(SDL_Surface* surface) { SDL_FreeSurface(surface); }
+};
+
+struct SDLFontDeleter {
+  void operator()(TTF_Font* font) { TTF_CloseFont(font); }
 };
 
 class SDLDisplay : public Display {
@@ -38,10 +54,12 @@ class SDLDisplay : public Display {
   void PutTextAbsolute(int y, int x, const std::string& text, int scale,
                        Color fg, Color bg) override;
 
+  std::unique_ptr<TTF_Font, SDLFontDeleter> font_;
+  std::unique_ptr<SDL_Renderer, SDLRendererDeleter> renderer_;
   std::unique_ptr<SDL_Window, SDLWindowDeleter> window_;
 
   // window_ will free this pointer when destroyed.
-  SDL_Surface *surface_;
+  // SDL_Surface* surface_;
 };
 
 }  // namespace gfx

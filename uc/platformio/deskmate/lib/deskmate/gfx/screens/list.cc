@@ -1,7 +1,5 @@
 #include "deskmate/gfx/screens/list.h"
 
-#include <Arduino.h>
-
 #include <algorithm>
 
 #include "deskmate/gfx/display.h"
@@ -42,7 +40,9 @@ void ListScreen::Render(Display *display) const {
   for (size_t index = top_index_;
        index < items_.size() && index * line_height < display->GetSize().height;
        index++) {
-    Rect item_window{Point{(index - top_index_) * line_height, 0}, {line_height, window_size.width}};
+    Rect item_window{Point{
+      static_cast<unsigned int>((index - top_index_) * line_height), 0},
+      {line_height, window_size.width}};
     display->PushWindow(item_window);
     items_[index]->Render(display, index == selected_);
     display->PopWindow();

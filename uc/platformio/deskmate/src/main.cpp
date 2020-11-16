@@ -89,7 +89,7 @@ void setup() {
   }
   list_screen_left = std::make_unique<ListScreen>(item_ptrs);
 
-  // Populate list_screen_left.
+  // Populate list_screen_right.
   for (int i = 0; i < 10; i++) {
     text_list_items.push_back(std::make_unique<TextListItem>(
         "Hello " + std::string(String(i).c_str())));

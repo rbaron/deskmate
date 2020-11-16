@@ -1,9 +1,10 @@
 #include "deskmate/sdl2/gfx/display.h"
 
-#include <SDL.h>
-
 #include <iostream>
 #include <memory>
+
+#include "SDL.h"
+#include "SDL_ttf.h"
 
 namespace deskmate {
 namespace sdl2 {
@@ -12,6 +13,9 @@ namespace {
 using deskmate::gfx::Color;
 using deskmate::gfx::Display;
 using deskmate::gfx::Size;
+
+constexpr SDL_Color kSDLBlack{0x00, 0x00, 0x00, 0xff};
+constexpr SDL_Color kSDLWhite{0xff, 0xff, 0xff, 0xff};
 }  // namespace
 
 SDLDisplay::SDLDisplay(unsigned int height, unsigned int width)
@@ -23,47 +27,62 @@ SDLDisplay::SDLDisplay(unsigned int height, unsigned int width)
     std::cerr << "Unable to initialize window\n";
     exit(-1);
   }
-  surface_ = SDL_GetWindowSurface(window_.get());
-  if (surface_ == NULL) {
-    std::cerr << "Unable to initialize surface\n";
+  renderer_ = std::unique_ptr<SDL_Renderer, SDLRendererDeleter>(
+      SDL_CreateRenderer(window_.get(), /*index=*/-1, /*flags=*/0));
+  if (!renderer_) {
+    std::cerr << "Unable to initialize renderer\n";
     exit(-1);
   }
-  SDL_FillRect(surface_, NULL,
-               SDL_MapRGB(surface_->format, 0xFF, 0xFF, 0xFF));
-  SDL_UpdateWindowSurface(window_.get());
-  // SDL_Window* window = NULL;
-  // SDL_Surface* screenSurface = NULL;
-
-  // window = SDL_CreateWindow("hello_sdl2", SDL_WINDOWPOS_UNDEFINED,
-  //                           SDL_WINDOWPOS_UNDEFINED, kDisplayWidth,
-  //                           kDisplayHeight, SDL_WINDOW_SHOWN);
-  // if (window == NULL) {
-  //   fprintf(stderr, "could not create window: %s\n", SDL_GetError());
-  //   return 1;
-  // }
-  // screenSurface = SDL_GetWindowSurface(window);
-  // SDL_FillRect(screenSurface, NULL,
-  //              SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
-  // SDL_UpdateWindowSurface(window);
+  if (TTF_Init() < 0) {
+    std::cerr << "Unable to initialize SDL_ttf\n";
+    exit(-1);
+  }
+  font_ = std::unique_ptr<TTF_Font, SDLFontDeleter>(
+      TTF_OpenFont("/Users/rbaron/dev/deskmate/uc/platformio/deskmate/assets/"
+                   "fonts/DejaVu/DejaVuSansMono.ttf",
+                   12));
+  if (!font_) {
+    std::cerr << "Unable to initialize SDL_ttf: " << TTF_GetError()
+              << std::endl;
+    exit(-1);
+  }
 }
 
 SDLDisplay::~SDLDisplay() {}
 
 void SDLDisplay::Clear() {
-  std::cerr << "window_: " << window_ << std::endl;
-  std::cerr << "surface_: " << surface_ << std::endl;
-  std::cerr << "1 surface_: " << surface_->format << std::endl;
-  SDL_FillRect(surface_, NULL,
-               SDL_MapRGB(surface_->format, 0xFF, 0xFF, 0xFF));
-  std::cerr << "2 surface_: " << surface_ << std::endl;
+  SDL_SetRenderDrawColor(renderer_.get(), 0xff, 0xff, 0xff, 0xff);
+  SDL_RenderClear(renderer_.get());
 }
 
-void SDLDisplay::Refresh() { SDL_UpdateWindowSurface(window_.get()); }
+void SDLDisplay::Refresh() { SDL_RenderPresent(renderer_.get()); }
 
-void SDLDisplay::DrawPixelAbsolute(int y, int x, Color color) {}
+void SDLDisplay::DrawPixelAbsolute(int y, int x, Color color) {
+  SDL_SetRenderDrawColor(renderer_.get(), 0, 0, 0, 0xff);
+  SDL_RenderDrawPoint(renderer_.get(), x, y);
+}
 
 void SDLDisplay::PutTextAbsolute(int y, int x, const std::string& text,
-                                 int scale, Color fg, Color bg) {}
+                                 int scale, Color fg, Color bg) {
+  const SDL_Color& text_color = fg == Color::kBlack ? kSDLBlack : kSDLWhite;
+  const SDL_Color& back_color = bg == Color::kBlack ? kSDLBlack : kSDLWhite;
+
+  SDL_Rect dest{x, y, static_cast<int>(kCharWidth * scale * text.length()),
+                static_cast<int>(scale * kCharHeight)};
+
+  // Draw background.
+  SDL_SetRenderDrawColor(renderer_.get(), back_color.r, back_color.g,
+                         back_color.b, back_color.a);
+  SDL_RenderFillRect(renderer_.get(), &dest);
+
+  // Draw text.
+  auto text_surface = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>(
+      TTF_RenderText_Solid(font_.get(), text.c_str(), text_color));
+  auto text_texture = std::unique_ptr<SDL_Texture, SDLTextureDeleter>(
+      SDL_CreateTextureFromSurface(renderer_.get(), text_surface.get()));
+
+  SDL_RenderCopy(renderer_.get(), text_texture.get(), nullptr, &dest);
+}
 
 }  // namespace gfx
 }  // namespace sdl2

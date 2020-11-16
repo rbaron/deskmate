@@ -7,6 +7,7 @@ namespace deskmate {
 namespace input {
 
 enum class InputEvent {
+  kUnknown,
   kCrankCW,
   kCrankCCW,
   kCrankPush,

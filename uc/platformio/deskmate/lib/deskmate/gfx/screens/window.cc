@@ -1,7 +1,5 @@
 #include "deskmate/gfx/screens/window.h"
 
-#include <Arduino.h>
-
 #include <algorithm>
 
 #include "deskmate/gfx/display.h"
