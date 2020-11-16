@@ -1,0 +1,3 @@
+[submodule "uc/platformio/deskmate/third-party/paho.mqtt.c"]
+	path = uc/platformio/deskmate/third-party/paho.mqtt.c
+	url = git@github.com:eclipse/paho.mqtt.c
