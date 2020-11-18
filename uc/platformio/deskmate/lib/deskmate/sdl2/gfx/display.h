@@ -40,7 +40,9 @@ struct SDLFontDeleter {
 
 class SDLDisplay : public Display {
  public:
-  SDLDisplay(unsigned int height, unsigned int width);
+  // font_path is the filesystem path to a monospace font.
+  SDLDisplay(unsigned int height, unsigned int width,
+             const std::string& font_path);
   ~SDLDisplay() override;
 
   Size GetCharSize() const override { return {kCharHeight, kCharWidth}; };
@@ -57,9 +59,6 @@ class SDLDisplay : public Display {
   std::unique_ptr<TTF_Font, SDLFontDeleter> font_;
   std::unique_ptr<SDL_Renderer, SDLRendererDeleter> renderer_;
   std::unique_ptr<SDL_Window, SDLWindowDeleter> window_;
-
-  // window_ will free this pointer when destroyed.
-  // SDL_Surface* surface_;
 };
 
 }  // namespace gfx

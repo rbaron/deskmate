@@ -21,6 +21,7 @@ using deskmate::mqtt::MQTTSubscriber;
 
 // Represents a ListItem that issues MQTT messages when clicked and listens and
 // reacts to a topic.
+// TODO: move implementations to .cc.
 class MQTTListItem : public ListItem, public MQTTSubscriber {
  public:
   MQTTListItem(const std::string& display_name,

@@ -6,7 +6,9 @@ project (deskmate)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${deskmate_SOURCE_DIR}/cmake")
 
-include_directories(lib)
+include_directories(
+  lib
+  third-party/paho.mqtt.c/src)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
@@ -25,7 +27,13 @@ set(SRC
   lib/deskmate/gfx/screens/window.cc
   lib/deskmate/sdl2/gfx/display.cc
   lib/deskmate/sdl2/input/input_transcriber.cc
+  lib/deskmate/sdl2/net/mqtt.cc
 )
 
+link_directories(${CMAKE_SOURCE_DIR}/third-party/paho.mqtt.c/build/src)
+
 add_executable(deskmate src/main_sdl2.cc ${SRC})
-target_link_libraries(deskmate ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
+
+# Do we need to specify the extension .dylib here? Is there a better, cross-platform way
+# of doing this?
+target_link_libraries(deskmate ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES} libpaho-mqtt3cs.dylib)
