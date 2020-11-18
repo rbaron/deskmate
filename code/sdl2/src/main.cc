@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "MQTTClient.h"
-#include "credentials_sdl2.h"
+#include "credentials.h"
 #include "deskmate/gfx/components/mqtt_list_item.h"
 #include "deskmate/gfx/components/text_list_item.h"
 #include "deskmate/gfx/display.h"
