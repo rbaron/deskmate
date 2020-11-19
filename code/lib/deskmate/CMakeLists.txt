@@ -10,6 +10,7 @@ set(SRC
   src/deskmate/gfx/display.cc
   src/deskmate/gfx/screens/list.cc
   src/deskmate/gfx/screens/window.cc
+  src/deskmate/mqtt/mqtt.cc
 )
 
 add_library(deskmate ${SRC})

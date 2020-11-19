@@ -9,11 +9,15 @@ namespace deskmate {
 namespace arduino {
 namespace net {
 
-namespace {}  // namespace
+namespace {
+using deskmate::mqtt::MQTTMessage;
+}  // namespace
 
 MQTTManager::MQTTManager(const char* server, int port, const char* username,
                          const char* password, const char* client_id)
     : username_(username), password_(password), client_id_(client_id) {
+  // Register the "On new message" callback, which puts the message into
+  // this->InputQueue().
   pubsub_client_ = std::make_unique<PubSubClient>(
       server, port,
       [this](const char* topic, byte* payload, unsigned int length) {
@@ -31,35 +35,13 @@ bool MQTTManager::Connect() {
                                  password_.c_str());
 }
 
-bool MQTTManager::Subscribe(const std::string& topic) {
-  subscribed_topics_.push_back(topic);
+bool MQTTManager::IsConnected() const { return pubsub_client_->connected(); }
+
+bool MQTTManager::SubscribeOnly(const std::string& topic) {
   return pubsub_client_->subscribe(topic.c_str());
 }
-
-bool MQTTManager::Process() {
-  if (!pubsub_client_->connected()) {
-    Connect();
-
-    // Re-subscribe to topics.
-    std::for_each(subscribed_topics_.cbegin(), subscribed_topics_.cend(),
-                  [this](const std::string& topic) { Subscribe(topic); });
-  } else {
-    pubsub_client_->loop();
-  }
-
-  while (!out_queue_.empty()) {
-    const MQTTMessage& msg = out_queue_.front();
-    Serial.printf("Will send message %s -> %s\n", msg.topic.c_str(),
-                  msg.payload.c_str());
-    if (pubsub_client_->publish(msg.topic.c_str(), msg.payload.c_str())) {
-      Serial.println("Sent!");
-    } else {
-      Serial.println("Failed!");
-      return false;
-    }
-    out_queue_.pop();
-  }
-  return true;
+bool MQTTManager::Publish(const MQTTMessage& msg) {
+  return pubsub_client_->publish(msg.topic.c_str(), msg.payload.c_str());
 }
 
 }  // namespace net

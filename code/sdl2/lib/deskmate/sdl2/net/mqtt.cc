@@ -16,13 +16,23 @@ using deskmate::mqtt::MQTTMessage;
 using deskmate::mqtt::MQTTMessageBuffer;
 using deskmate::mqtt::MQTTMessageQueue;
 
-constexpr bool kCleanSession = false;
+// TODO: test connection drop/restablish.
+constexpr bool kCleanSession = true;
 constexpr int kKeepAliveIntervalSecs = 20;
 // Quality of service 0 just so we match the Arduino implementation.
 constexpr int kQoS = 0;
 
+// TODO: there's a bug here:
+// While in normal operation, disconnect from the network. After
+// `kKeepAliveIntervalSecs`, Paho's MQTT connection will drop. But when
+// switching the connection on again, Paho will try to reconnect and some weird
+// stuff happens. I suspect it's because the old connection was never properly
+// closed, so the MQTT server things it's still there. And when a new connection
+// with the same client ID is stablished, the MQTT server drops should drop the
+// old one (since the client IDs have to be unique), but somehow it affects the
+// new connection. Maybe I'm not cleaning things up properly.
 void OnConnLost(void* context, char* cause) {
-  std::cout << "Connection lost!\n";
+  std::cerr << "MQTT connection lost!\n";
 }
 
 }  // namespace
@@ -39,15 +49,15 @@ PahoMQTTManager::PahoMQTTManager(const char* server, int port,
 
   int ret;
   if ((ret = MQTTClient_create(mqtt_client_.get(), server, client_id,
-                               MQTTCLIENT_PERSISTENCE_NONE, NULL)) !=
+                               MQTTCLIENT_PERSISTENCE_NONE, nullptr)) !=
       MQTTCLIENT_SUCCESS) {
     std::cerr << "Unable to create client: " << ret << std::endl;
     std::exit(-1);
   }
 
-  if ((ret = MQTTClient_setCallbacks(*mqtt_client_, this, &OnConnLost,
+  if ((ret = MQTTClient_setCallbacks(*mqtt_client_, this, nullptr,
                                      &PahoMQTTManager::OnMessageReceived,
-                                     NULL)) != MQTTCLIENT_SUCCESS) {
+                                     nullptr)) != MQTTCLIENT_SUCCESS) {
     std::cerr << "Unable to set callbacks: " << ret << std::endl;
     std::exit(-1);
   }
@@ -70,61 +80,38 @@ bool PahoMQTTManager::Connect() {
   return true;
 }
 
-bool PahoMQTTManager::Subscribe(const std::string& topic) {
+bool PahoMQTTManager::IsConnected() const {
+  return MQTTClient_isConnected(*mqtt_client_);
+}
+
+bool PahoMQTTManager::SubscribeOnly(const std::string& topic) {
   int ret = MQTTClient_subscribe(*mqtt_client_, topic.c_str(), kQoS);
   if (ret != MQTTCLIENT_SUCCESS) {
     std::cerr << "Failed to subscribe: " << ret << std::endl;
     return false;
   }
-  subscribed_topics_.push_back(topic);
+  std::cerr << "Subscribed to: " << topic << std::endl;
   return true;
 }
 
-// TODO: move this function to the base class. Create a virtual private
-// Publish(const &MQTTMessage) to be implemented by derived classes.
-bool PahoMQTTManager::Process() {
-  if (!MQTTClient_isConnected(*mqtt_client_)) {
-    std::cerr << "Client is not connected. Reconnecting and re-subscribing\n";
-    if (!Connect()) {
-      return false;
-    }
-    // TODO: better error handling when re-subscribing.
-    // Re-subscribe to topics.
-    std::for_each(subscribed_topics_.cbegin(), subscribed_topics_.cend(),
-                  [this](const std::string& topic) { Subscribe(topic); });
-  }
-
-  // Send messages.
-  while (!out_queue_.empty()) {
-    const MQTTMessage& msg = out_queue_.front();
-    std::cout << "Will send message: " << msg.topic << " -> " << msg.payload
-              << std::endl;
-    if (MQTTClient_publish(*mqtt_client_, msg.topic.c_str(),
-                           msg.payload.length(), msg.payload.c_str(), kQoS,
-                           /*retained=*/false,
-                           /*dt=*/nullptr) == MQTTCLIENT_SUCCESS) {
-      std::cout << "Sent!\n";
-    } else {
-      std::cout << "Failed!\n";
-      return false;
-    }
-    out_queue_.pop();
-  }
-  return true;
+bool PahoMQTTManager::Publish(const MQTTMessage& msg) {
+  return MQTTClient_publish(*mqtt_client_, msg.topic.c_str(),
+                            msg.payload.length(), msg.payload.c_str(), kQoS,
+                            /*retained=*/false,
+                            /*dt=*/nullptr) == MQTTCLIENT_SUCCESS;
 }
 
+// Static callback. context is the address of a PahoMQTTManager instance.
 int PahoMQTTManager::OnMessageReceived(void* context, char* topic,
                                        int topic_len,
                                        MQTTClient_message* message) {
   if (context) {
     PahoMQTTManager* instance = static_cast<PahoMQTTManager*>(context);
-    instance->in_queue_.push(
+    instance->InputQueue()->push(
         // topic_len is only set if there is a \0 in topic.
         {std::string(topic, topic_len > 0 ? topic_len : std::strlen(topic)),
          std::string(static_cast<char*>(message->payload),
                      message->payloadlen)});
-    std::cout << "Received message: " << instance->in_queue_.back().topic
-              << " -> " << instance->in_queue_.back().payload << std::endl;
   }
   MQTTClient_free(topic);
   MQTTClient_freeMessage(&message);
