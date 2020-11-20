@@ -19,7 +19,7 @@ constexpr unsigned int kPadding = 2;
 
 // TODO: use a circular linked list and get rid of this questionable
 // implementation.
-int FindNextFocusableIndex(const std::vector<WindowedScreen> wss,
+int FindNextFocusableIndex(const std::vector<WindowedScreen>& wss,
                            int currently_focused) {
   // After.
   for (int i = currently_focused + 1; i < wss.size(); i++) {
@@ -40,7 +40,7 @@ int FindNextFocusableIndex(const std::vector<WindowedScreen> wss,
 }  // namespace
 
 Window::Window(std::vector<WindowedScreen>& windowed_screens)
-    : windowed_screens_(windowed_screens),
+    : windowed_screens_(std::move(windowed_screens)),
       focused_index_(FindNextFocusableIndex(windowed_screens_, -1)) {}
 
 Window::~Window() {}

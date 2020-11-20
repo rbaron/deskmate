@@ -20,6 +20,8 @@ bool MQTTMessageBuffer::Process() {
                   [this](const std::string& topic) { Subscribe(topic); });
   }
 
+  OnProcess();
+
   // Send messages.
   while (!out_queue_.empty()) {
     const MQTTMessage& msg = out_queue_.front();

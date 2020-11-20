@@ -19,7 +19,8 @@ using deskmate::input::InputEvent;
 }  // namespace
 
 struct WindowedScreen {
-  Screen* screen;
+  // Screen* screen;
+  std::unique_ptr<Screen> screen;
   Rect window;
   // Whether or not this WindowedScreen can be "focused". A focused
   // WindowsScreen is one that the Window will pipe (some) InputEvents to. For
@@ -28,6 +29,8 @@ struct WindowedScreen {
 };
 
 // Capable of rendering multiple Screens. But it is also itself a Screen.
+// The Window owns the unique_ptrs or its children Screens.
+// TODO: change name to SplitScreen.
 class Window : public Screen {
  public:
   // Window is constructed with a vector of non-owned pointers to Screens.

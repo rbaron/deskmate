@@ -24,8 +24,9 @@ class MQTTManager : public MQTTMessageBuffer {
   MQTTManager(const char* server, int port, const char* username,
               const char* password, const char* client_id);
 
-  virtual bool Connect() override;
-  virtual bool IsConnected() const override;
+  bool Connect() override;
+  bool IsConnected() const override;
+  bool OnProcess() override;
 
  private:
   // Simply handles a subscription. Do not care about re-subscribing.

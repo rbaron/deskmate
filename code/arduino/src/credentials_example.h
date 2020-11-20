@@ -4,41 +4,50 @@
 #include <string>
 #include <vector>
 
+#include "deskmate/app/config.h"
+
 // TODO: Make these configs dynamic. Ideally configured from a web page, like
 // Tasmota/ESPHome.
 namespace deskmate {
 namespace credentials {
+namespace {
+using deskmate::app::MQTTConfig;
+}  // namespace
 
 // WiFi.
-constexpr char kWIFISSID[] = "your-wifi-ssid";
-constexpr char kWIFIPass[] = "your-wifi-password";
+constexpr char kWIFISSID[] = "wifi-ssid";
+constexpr char kWIFIPassword[] = "wifi-password";
 
 // MQTT.
 constexpr char kMQTTUser[] = "mqttuser";
 constexpr char kMQTTPassword[] = "mqttpassword";
 constexpr char kMQTTClientId[] = "deskmate-arduino";
-constexpr char kMQTTServer[] = "your-mqtt-server-hostname-or-ip-address";
+constexpr char kMQTTServer[] = "mqtt-broker-hostname-or-ip-address";
 constexpr int kMQTTPort = 1883;
 
-// Display.
+// Display pins.
+constexpr uint8_t kSCKPin = 14;
+constexpr uint8_t kMOSIPin = 13;
+constexpr uint8_t kCSPin = 15;
+
+// Display size.
 constexpr unsigned int kDisplayHeight = 240;
 constexpr unsigned int kDisplayWidth = 400;
 
-// MQTT commands/state topics. For now these are the requirements:
-// 1. command topics accept the strings "ON", "OFF"
-// 2. state topics publish the strings "ON", "OFF"
-// This is the default in Tasmota.
-struct MQTTConfigType {
-  std::string display_name;
-  std::string command_topic;
-  std::string state_topic;
-};
+// Input pins.
+// Crank A & B pins are the rotary encoder's two phase-shifted input pins.
+constexpr uint8_t kButtonAPin = 27;
+constexpr uint8_t kButtonBPin = 26;
+constexpr uint8_t kButtonCPin = 25;
+constexpr uint8_t kCrankAPin = 33;
+constexpr uint8_t kCrankBPin = 34;
+constexpr uint8_t kCrankPushPin = 32;
 
-const std::vector<MQTTConfigType> kMQTTConfigs{
+const std::vector<MQTTConfig> kMQTTConfigs{
+    {"Desk", "home/switch/cmnd/officedesk/POWER",
+     "home/switch/stat/officedesk/POWER"},
     {"Office", "home/switch/cmnd/office/POWER",
      "home/switch/stat/office/POWER"},
-    {"Living room", "home/switch/cmnd/livingroom2/POWER1",
-     "home/switch/stat/livingroom2/POWER1"},
 };
 
 }  // namespace credentials

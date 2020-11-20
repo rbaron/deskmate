@@ -37,6 +37,8 @@ bool MQTTManager::Connect() {
 
 bool MQTTManager::IsConnected() const { return pubsub_client_->connected(); }
 
+bool MQTTManager::OnProcess() { return pubsub_client_->loop(); }
+
 bool MQTTManager::SubscribeOnly(const std::string& topic) {
   return pubsub_client_->subscribe(topic.c_str());
 }

@@ -35,6 +35,10 @@ class MQTTMessageBuffer {
   virtual bool Connect() = 0;
   virtual bool IsConnected() const = 0;
 
+  // Derived classes can override this so custom code runs at every call to
+  // Process().
+  virtual bool OnProcess() { return true; };
+
   // Subscribes to a topic and remembers it so it automatically reconnects
   // when the connection is restablished.
   bool Subscribe(const std::string& topic);

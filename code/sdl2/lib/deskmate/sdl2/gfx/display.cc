@@ -40,10 +40,8 @@ SDLDisplay::SDLDisplay(unsigned int height, unsigned int width,
     std::cerr << "Unable to initialize SDL_ttf\n";
     exit(-1);
   }
-  // This will only work if we run the binary from the build/ directory.
-  // TODO: move this to a runtime config.
-  font_ = std::unique_ptr<TTF_Font, SDLFontDeleter>(TTF_OpenFont(
-      font_path.c_str(), kTTFFontInitSizePt));
+  font_ = std::unique_ptr<TTF_Font, SDLFontDeleter>(
+      TTF_OpenFont(font_path.c_str(), kTTFFontInitSizePt));
   if (!font_) {
     std::cerr << "Unable to initialize SDL_ttf: " << TTF_GetError()
               << std::endl;

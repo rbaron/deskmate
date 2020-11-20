@@ -11,6 +11,7 @@ set(SRC
   src/deskmate/gfx/screens/list.cc
   src/deskmate/gfx/screens/window.cc
   src/deskmate/mqtt/mqtt.cc
+  src/deskmate/app/app.cc
 )
 
 add_library(deskmate ${SRC})
