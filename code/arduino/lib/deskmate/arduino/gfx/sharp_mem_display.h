@@ -14,15 +14,8 @@ namespace arduino {
 namespace gfx {
 
 namespace {
-
-using deskmate::gfx::Color;
-using deskmate::gfx::Point;
-using deskmate::gfx::Rect;
-using deskmate::gfx::Size;
-
 constexpr unsigned int kCharHeight = 8;
 constexpr unsigned int kCharWidth = 6;
-
 }  // namespace
 
 class SharpMemDisplay : public deskmate::gfx::Display {
@@ -31,16 +24,28 @@ class SharpMemDisplay : public deskmate::gfx::Display {
                   uint8_t mosi_pin, uint8_t cs_pin);
   ~SharpMemDisplay() override;
 
-  Size GetCharSize() const override { return {kCharHeight, kCharWidth}; };
+  deskmate::gfx::Size GetCharSize() const override {
+    return {kCharHeight, kCharWidth};
+  };
 
   void Clear() override;
   void Refresh() override;
 
  private:
-  void DrawPixelAbsolute(int y, int x, Color color) override;
+  void DrawPixelAbsolute(int y, int x, deskmate::gfx::Color color) override;
 
   void PutTextAbsolute(int y, int x, const std::string& text, int scale,
-                       Color fg, Color bg) override;
+                       deskmate::gfx::Color fg,
+                       deskmate::gfx::Color bg) override;
+
+  void DrawRectAbsolute(const deskmate::gfx::Rect& rect,
+                        deskmate::gfx::Color color) override;
+  void FillRectAbsolute(const deskmate::gfx::Rect& rect,
+                        deskmate::gfx::Color color) override;
+  void DrawCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+                          deskmate::gfx::Color color) override;
+  void FillCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+                          deskmate::gfx::Color color) override;
 
   std::unique_ptr<Adafruit_SharpMem> display_;
 };

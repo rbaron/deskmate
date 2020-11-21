@@ -56,6 +56,30 @@ void SharpMemDisplay::PutTextAbsolute(int y, int x, const std::string& text,
   display_->write(text.c_str());
 }
 
+void SharpMemDisplay::DrawRectAbsolute(const deskmate::gfx::Rect& rect,
+                                       deskmate::gfx::Color color) {
+  display_->drawRect(rect.point.x, rect.point.y, rect.size.width,
+                     rect.size.height, ColorToInt(color));
+}
+
+void SharpMemDisplay::FillRectAbsolute(const deskmate::gfx::Rect& rect,
+                                       deskmate::gfx::Color color) {
+  display_->fillRect(rect.point.x, rect.point.y, rect.size.width,
+                     rect.size.height, ColorToInt(color));
+}
+
+void SharpMemDisplay::DrawCircleAbsolute(deskmate::gfx::Point center,
+                                         unsigned int radius,
+                                         deskmate::gfx::Color color) {
+  display_->drawCircle(center.x, center.y, radius, ColorToInt(color));
+}
+
+void SharpMemDisplay::FillCircleAbsolute(deskmate::gfx::Point center,
+                                         unsigned int radius,
+                                         deskmate::gfx::Color color) {
+  display_->fillCircle(center.x, center.y, radius, ColorToInt(color));
+}
+
 }  // namespace gfx
 }  // namespace arduino
 }  // namespace deskmate

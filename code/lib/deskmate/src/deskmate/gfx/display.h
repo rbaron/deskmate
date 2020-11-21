@@ -15,6 +15,11 @@ enum class Color {
 struct Point {
   unsigned int y;
   unsigned int x;
+  Point& operator+=(const Point& rhs) {
+    y += rhs.y;
+    x += rhs.x;
+    return *this;
+  }
 };
 
 struct Size {
@@ -29,6 +34,12 @@ struct Rect {
 };
 
 // Display is an interface for LCD/OLED/Software-based displays.
+// The coordinate system has its origin begin in the upper left corner:
+// (0, 0) .-----> x
+//        |
+//        |
+//        v
+//        y
 class Display {
  public:
   Display(unsigned int height, unsigned int width);
@@ -52,7 +63,12 @@ class Display {
   virtual void Refresh() = 0;
 
   void DrawPixel(int y, int x, Color color);
+  void DrawRect(Rect rect, Color color);
+  void FillRect(Rect rect, Color color);
+  void DrawCircle(Point center, unsigned int radius, Color color);
+  void FillCircle(Point center, unsigned int radius, Color color);
 
+  // TODO: pass coordinates via Point.
   void PutText(int y, int x, const std::string& text, int scale, Color fg,
                Color bg);
 
@@ -69,6 +85,12 @@ class Display {
                                Color fg, Color bg) = 0;
 
   virtual void DrawPixelAbsolute(int y, int x, Color color) = 0;
+  virtual void DrawRectAbsolute(const Rect& rect, Color color) = 0;
+  virtual void FillRectAbsolute(const Rect& rect, Color color) = 0;
+  virtual void DrawCircleAbsolute(Point center, unsigned int radius,
+                                  Color color) = 0;
+  virtual void FillCircleAbsolute(Point center, unsigned int radius,
+                                  Color color) = 0;
 
   std::stack<Rect> windows_stack_;
 };

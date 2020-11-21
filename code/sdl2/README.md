@@ -1,7 +1,7 @@
 # Building
 
 Dependencies:
-* [SDL2](https://www.libsdl.org/)[SDL2] libraries. On macos, `brew install sdl2 sdl2_ttf`
+* [SDL2](https://www.libsdl.org/)[SDL2] libraries. On macos, `brew install sdl2 sdl2_ttf sdl2_gfx`
 * [Eclipse Paho C Library](https://www.eclipse.org/paho/). See below how to build it.
 
 ## Step 1. Build paho.mqtt.c
@@ -30,3 +30,8 @@ $ make
 ```
 $ ./deskmate-sdl2
 ```
+
+# License
+The `deskmate-sdl2` is distributed under the MIT license (see `LICENSE` in the root directory of this repo).
+
+Files in the `cmake/` directory are distrubited under the BSD 3-Clause License and were obtained from [github.com/aminosbh/sdl2-cmake-modules](https://github.com/aminosbh/sdl2-cmake-modules).

@@ -51,10 +51,17 @@ class SDLDisplay : public Display {
   void Refresh() override;
 
  private:
-  void DrawPixelAbsolute(int y, int x, Color color) override;
-
   void PutTextAbsolute(int y, int x, const std::string& text, int scale,
                        Color fg, Color bg) override;
+  void DrawPixelAbsolute(int y, int x, Color color) override;
+  void DrawRectAbsolute(const deskmate::gfx::Rect& rect,
+                        deskmate::gfx::Color color) override;
+  void FillRectAbsolute(const deskmate::gfx::Rect& rect,
+                        deskmate::gfx::Color color) override;
+  void DrawCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+                          deskmate::gfx::Color color) override;
+  void FillCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+                          deskmate::gfx::Color color) override;
 
   std::unique_ptr<TTF_Font, SDLFontDeleter> font_;
   std::unique_ptr<SDL_Renderer, SDLRendererDeleter> renderer_;

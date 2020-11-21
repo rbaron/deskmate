@@ -10,8 +10,14 @@ namespace gfx {
 
 namespace {
 using deskmate::gfx::Color;
+using deskmate::gfx::Point;
 using deskmate::gfx::Rect;
 }  // namespace
+
+Point operator+(Point lhs, const Point& rhs) {
+  lhs += rhs;
+  return lhs;
+}
 
 Display::Display(unsigned int height, unsigned int width) {
   windows_stack_.push(Rect{Point{0, 0}, Size{height, width}});
@@ -19,9 +25,7 @@ Display::Display(unsigned int height, unsigned int width) {
 
 void Display::PushWindow(const Rect& window) {
   const Rect& current = windows_stack_.top();
-  windows_stack_.push(Rect{
-      Point{current.point.y + window.point.y, current.point.x + window.point.x},
-      window.size});
+  windows_stack_.push(Rect{current.point + window.point, window.size});
 }
 
 // TODO: die with a nice message if this is empty.
@@ -34,11 +38,34 @@ void Display::DrawPixel(int y, int x, Color color) {
   DrawPixelAbsolute(window.point.y + y, window.point.x + x, color);
 }
 
+void Display::DrawRect(Rect rect, Color color) {
+  const Rect& window = windows_stack_.top();
+  rect.point += window.point;
+  DrawRectAbsolute(rect, color);
+}
+
+void Display::FillRect(Rect rect, Color color) {
+  const Rect& window = windows_stack_.top();
+  rect.point += window.point;
+  FillRectAbsolute(rect, color);
+}
+
+void Display::DrawCircle(Point center, unsigned int radius, Color color) {
+  const Rect& window = windows_stack_.top();
+  center += window.point;
+  DrawCircleAbsolute(center, radius, color);
+}
+
+void Display::FillCircle(Point center, unsigned int radius, Color color) {
+  const Rect& window = windows_stack_.top();
+  center += window.point;
+  FillCircleAbsolute(center, radius, color);
+}
+
 void Display::PutText(int y, int x, const std::string& text, int scale,
-                              Color fg, Color bg) {
+                      Color fg, Color bg) {
   const Rect& window = windows_stack_.top();
   PutTextAbsolute(window.point.y + y, window.point.x + x, text, scale, fg, bg);
 }
-
 }  // namespace gfx
 }  // namespace deskmate

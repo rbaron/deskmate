@@ -13,6 +13,7 @@
 #include "deskmate/arduino/input/crank.h"
 #include "deskmate/arduino/net/mqtt.h"
 #include "deskmate/arduino/net/wifi.h"
+#include "deskmate/gfx/display.h"  // testing only
 
 using deskmate::app::App;
 using deskmate::arduino::gfx::SharpMemDisplay;
@@ -34,11 +35,11 @@ using deskmate::credentials::kWIFISSID;
 
 // MQTT.
 using deskmate::credentials::kMQTTClientId;
+using deskmate::credentials::kMQTTConfigs;
 using deskmate::credentials::kMQTTPassword;
 using deskmate::credentials::kMQTTPort;
 using deskmate::credentials::kMQTTServer;
 using deskmate::credentials::kMQTTUser;
-using deskmate::credentials::kMQTTConfigs;
 
 // Input pins.
 using deskmate::credentials::kButtonAPin;
@@ -73,6 +74,14 @@ void setup() {
                                kButtonCPin, app.GetInputEventHandler());
   SetupCrankInterruptHandler(kCrankAPin, kCrankBPin,
                              app.GetInputEventHandler());
+
+  // Quick tests.
+  // display.Clear();
+  // display.DrawRect({{10, 10}, {10, 10}}, deskmate::gfx::Color::kBlack);
+  // display.FillRect({{20, 20}, {20, 20}}, deskmate::gfx::Color::kBlack);
+  // display.DrawCircle({100, 100}, 20, deskmate::gfx::Color::kBlack);
+  // display.FillCircle({150, 100}, 20, deskmate::gfx::Color::kBlack);
+  // display.Refresh();
 
   while (true) {
     wifi_manager.MaybeReconnect();

@@ -36,6 +36,9 @@ class SDLIniter {
       std::exit(-1);
     }
     std::cout << "SDL initialized\n";
+
+    // TODO: rendered stuff looks blurry.
+    // SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
   }
   ~SDLIniter() { SDL_Quit(); }
 };
@@ -52,6 +55,9 @@ int main(int argc, char *argv[]) {
   }
 
   SDLDisplay display(kDisplayHeight, kDisplayWidth, kFontPath);
+  // display.Clear();
+  // display.FillCircle({60, 120}, 50, deskmate::gfx::Color::kBlack);
+  // display.Refresh();
 
   App app(&display, &mqtt_manager);
   app.Init(kMQTTConfigs);
