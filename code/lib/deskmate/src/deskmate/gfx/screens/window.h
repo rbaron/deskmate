@@ -11,17 +11,11 @@
 namespace deskmate {
 namespace gfx {
 namespace screens {
-namespace {
-using deskmate::gfx::Rect;
-using deskmate::gfx::Screen;
-using deskmate::gfx::Size;
-using deskmate::input::InputEvent;
-}  // namespace
 
 struct WindowedScreen {
   // Screen* screen;
-  std::unique_ptr<Screen> screen;
-  Rect window;
+  std::unique_ptr<deskmate::gfx::Screen> screen;
+  deskmate::gfx::Rect window;
   // Whether or not this WindowedScreen can be "focused". A focused
   // WindowsScreen is one that the Window will pipe (some) InputEvents to. For
   // example, a status bar might not be focusable, since it's read only.
@@ -36,7 +30,7 @@ class Window : public Screen {
   // Window is constructed with a vector of non-owned pointers to Screens.
   explicit Window(std::vector<WindowedScreen>& windowed_screens);
   ~Window() override;
-  void HandleInputEvent(InputEvent event) override;
+  void HandleInputEvent(deskmate::input::InputEvent event) override;
   void Render(Display* display) const override;
 
  private:

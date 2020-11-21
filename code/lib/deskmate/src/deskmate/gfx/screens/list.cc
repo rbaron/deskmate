@@ -35,7 +35,8 @@ void ListScreen::HandleInputEvent(InputEvent event) {
 
 void ListScreen::Render(Display *display) const {
   uint8_t font_scale = 2;
-  uint8_t line_height = font_scale * display->GetCharSize().height;
+  // uint8_t line_height = font_scale * display->GetCharSize().height;
+  uint8_t line_height = 32;
   const Size& window_size = display->GetSize();
   for (size_t index = top_index_;
        index < items_.size() && index * line_height < display->GetSize().height;

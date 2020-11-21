@@ -10,6 +10,7 @@ set(SRC
   src/deskmate/gfx/display.cc
   src/deskmate/gfx/screens/list.cc
   src/deskmate/gfx/screens/window.cc
+  src/deskmate/gfx/components/mqtt_list_item.cc
   src/deskmate/mqtt/mqtt.cc
   src/deskmate/app/app.cc
 )

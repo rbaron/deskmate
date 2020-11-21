@@ -15,7 +15,7 @@ using deskmate::gfx::Rect;
 using deskmate::input::InputEvent;
 
 // Padding inside WindowedScreens.
-constexpr unsigned int kPadding = 2;
+constexpr unsigned int kPadding = 1;
 
 // TODO: use a circular linked list and get rid of this questionable
 // implementation.
@@ -71,6 +71,9 @@ void Window::Render(Display* display) const {
     display->PushWindow(padded_window);
     ws.screen->Render(display);
     display->PopWindow();
+
+    // Draw the border after the content has been drawn.
+    display->DrawRect(w, Color::kBlack);
   }
 }
 

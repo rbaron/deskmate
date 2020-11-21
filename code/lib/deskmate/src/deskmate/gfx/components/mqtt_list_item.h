@@ -9,61 +9,29 @@ namespace deskmate {
 namespace gfx {
 namespace components {
 
-namespace {
-using deskmate::gfx::Color;
-using deskmate::gfx::Display;
-using deskmate::gfx::Size;
-using deskmate::gfx::screens::ListItem;
-using deskmate::mqtt::MQTTMessage;
-using deskmate::mqtt::MQTTMessageQueue;
-using deskmate::mqtt::MQTTSubscriber;
-}  // namespace
-
 // Represents a ListItem that issues MQTT messages when clicked and listens and
 // reacts to a topic.
-// TODO: move implementations to .cc.
-class MQTTListItem : public ListItem, public MQTTSubscriber {
+class MQTTListItem : public deskmate::gfx::screens::ListItem,
+                     public deskmate::mqtt::MQTTSubscriber {
  public:
   MQTTListItem(const std::string& display_name,
                const std::string& command_topic,
                const std::string& subscription_topic,
-               MQTTMessageQueue* mqtt_out_queue)
-      : display_name_(display_name),
-        command_topic_(command_topic),
-        subscription_topic_(subscription_topic),
-        mqtt_out_queue_(mqtt_out_queue) {}
+               deskmate::mqtt::MQTTMessageQueue* mqtt_out_queue);
 
-  void Render(Display* display, bool is_selected) const override {
-    const unsigned int char_scale = 2;
-    const Size& size = display->GetSize();
-    const Size& char_size = display->GetCharSize();
-    std::string text = display_name_ + (on_ ? " ON " : " OFF ");
-    if (text.length() * char_scale * char_size.width > size.width) {
-      text = text.substr(0, size.width / (char_scale * char_size.width) - 1);
-      text += ".";
-    }
-    display->PutText(0, 0, text, char_scale,
-                     is_selected ? Color::kWhite : Color::kBlack,
-                     is_selected ? Color::kBlack : Color::kWhite);
-  }
+  void Render(deskmate::gfx::Display* display, bool is_selected) const override;
 
-  void OnSelect() override {
-    mqtt_out_queue_->push({command_topic_, on_ ? "OFF" : "ON"});
-  }
+  void OnSelect() override;
 
-  std::string GetSubscriptionTopic() const override {
-    return subscription_topic_;
-  }
+  std::string GetSubscriptionTopic() const override;
 
  private:
-  void HandleOwnMessage(const MQTTMessage& msg) override {
-    on_ = msg.payload == "ON";
-  }
+  void HandleOwnMessage(const deskmate::mqtt::MQTTMessage& msg) override;
 
   std::string display_name_;
   std::string command_topic_;
   std::string subscription_topic_;
-  MQTTMessageQueue* mqtt_out_queue_;
+  deskmate::mqtt::MQTTMessageQueue* mqtt_out_queue_;
   bool on_ = false;
 };
 
