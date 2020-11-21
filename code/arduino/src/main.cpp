@@ -36,6 +36,7 @@ using deskmate::credentials::kWIFISSID;
 // MQTT.
 using deskmate::credentials::kMQTTClientId;
 using deskmate::credentials::kMQTTConfigs;
+using deskmate::credentials::kMQTTFloatingPointSensors;
 using deskmate::credentials::kMQTTPassword;
 using deskmate::credentials::kMQTTPort;
 using deskmate::credentials::kMQTTServer;
@@ -68,20 +69,12 @@ void setup() {
   }
 
   App app(&display, &mqtt_manager);
-  app.Init(kMQTTConfigs);
+  app.Init(kMQTTConfigs, kMQTTFloatingPointSensors);
 
   SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin,
                                kButtonCPin, app.GetInputEventHandler());
   SetupCrankInterruptHandler(kCrankAPin, kCrankBPin,
                              app.GetInputEventHandler());
-
-  // Quick tests.
-  // display.Clear();
-  // display.DrawRect({{10, 10}, {10, 10}}, deskmate::gfx::Color::kBlack);
-  // display.FillRect({{20, 20}, {20, 20}}, deskmate::gfx::Color::kBlack);
-  // display.DrawCircle({100, 100}, 20, deskmate::gfx::Color::kBlack);
-  // display.FillCircle({150, 100}, 20, deskmate::gfx::Color::kBlack);
-  // display.Refresh();
 
   while (true) {
     wifi_manager.MaybeReconnect();

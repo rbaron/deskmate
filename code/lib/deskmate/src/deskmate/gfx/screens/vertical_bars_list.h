@@ -1,5 +1,5 @@
-#ifndef DESKMATE_GFX_SCREENS_LIST_H
-#define DESKMATE_GFX_SCREENS_LIST_H
+#ifndef DESKMATE_GFX_SCREENS_VERTICAL_BARS_LIST_H
+#define DESKMATE_GFX_SCREENS_VERTICAL_BARS_LIST_H
 
 #include <memory>
 #include <vector>
@@ -12,9 +12,9 @@ namespace deskmate {
 namespace gfx {
 namespace screens {
 
-class BarListItem {
+class VerticalBarListItem {
  public:
-  virtual ~BarListItem() = default;
+  virtual ~VerticalBarListItem() = default;
   virtual const std::string& DisplayName() const = 0;
   virtual double Percentage() const = 0;
   virtual bool IsFilled() const = 0;
@@ -24,14 +24,15 @@ class BarListItem {
 
 class VerticalBarsList : public Screen {
  public:
-  explicit VerticalBarsList(std::vector<std::unique_ptr<BarListItem>>& items)
+  explicit VerticalBarsList(
+      std::vector<std::unique_ptr<VerticalBarListItem>>& items)
       : items_(std::move(items)), selected_(0), top_index_(0) {}
   ~VerticalBarsList() override;
   void HandleInputEvent(deskmate::input::InputEvent event) override;
   void Render(Display* display) const override;
 
  private:
-  std::vector<std::unique_ptr<BarListItem>> items_;
+  std::vector<std::unique_ptr<VerticalBarListItem>> items_;
   std::size_t selected_;
   std::size_t top_index_;
 };
@@ -40,4 +41,4 @@ class VerticalBarsList : public Screen {
 }  // namespace gfx
 }  // namespace deskmate
 
-#endif  // DESKMATE_GFX_SCREENS_LIST_H
+#endif  // DESKMATE_GFX_SCREENS_VERTICAL_BARS_LIST_H

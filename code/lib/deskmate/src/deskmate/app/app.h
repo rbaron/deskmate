@@ -20,18 +20,6 @@ namespace {
 
 using deskmate::app::MQTTConfig;
 using deskmate::gfx::Display;
-// using deskmate::gfx::Size;
-// using deskmate::gfx::components::MQTTListItem;
-// using deskmate::gfx::components::TextListItem;
-// using deskmate::gfx::screens::ListItem;
-// using deskmate::gfx::screens::ListScreen;
-// using deskmate::gfx::screens::Window;
-// using deskmate::gfx::screens::WindowedScreen;
-// using deskmate::input::InputEventHandler;
-// using deskmate::mqtt::MQTTMessage;
-// using deskmate::mqtt::MQTTMessageBuffer;
-// using deskmate::mqtt::MQTTSubscriber;
-
 }  // namespace
 
 // TODO: make this more flexible. In an ideal world, it would receive a config
@@ -45,7 +33,8 @@ class App {
   App(Display *display, deskmate::mqtt::MQTTMessageBuffer *mqtt_buffer)
       : display_(display), mqtt_buffer_(mqtt_buffer) {}
 
-  bool Init(const std::vector<MQTTConfig> &mqtt_configs);
+  bool Init(const std::vector<MQTTConfig> &mqtt_configs,
+            const std::vector<MQTTFloatingPointSensorConfig> sensor_configs);
 
   bool Tick();
 

@@ -30,12 +30,22 @@ constexpr char kFontPath[] = "../assets/fonts/DejaVu/DejaVuSansMono.ttf";
 constexpr unsigned int kDisplayHeight = 240;
 constexpr unsigned int kDisplayWidth = 400;
 
+// MQTT-powered switches.
 const std::vector<MQTTConfig> kMQTTConfigs{
     {"Desk", "home/switch/cmnd/officedesk/POWER",
      "home/switch/stat/officedesk/POWER"},
     {"Office", "home/switch/cmnd/office/POWER",
      "home/switch/stat/office/POWER"},
 };
+
+// MQTT-powered floating point sensors.
+const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
+    kMQTTFloatingPointSensors{
+        {"Monstera", "home/Monstera/soil_moisture_percent/retained"},
+        {"Ficus", "home/Ficus/soil_moisture_percent/retained"},
+        {"Calethea", "home/Calethea/soil_moisture_percent/retained"},
+        {"CitrusTree", "home/CitrusTree/soil_moisture_percent/retained"},
+    };
 
 }  // namespace credentials
 }  // namespace deskmate

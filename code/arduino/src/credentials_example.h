@@ -43,12 +43,22 @@ constexpr uint8_t kCrankAPin = 33;
 constexpr uint8_t kCrankBPin = 34;
 constexpr uint8_t kCrankPushPin = 32;
 
+// MQTT-powered switches.
 const std::vector<MQTTConfig> kMQTTConfigs{
     {"Desk", "home/switch/cmnd/officedesk/POWER",
      "home/switch/stat/officedesk/POWER"},
     {"Office", "home/switch/cmnd/office/POWER",
      "home/switch/stat/office/POWER"},
 };
+
+// MQTT-powered floating point sensors.
+const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
+    kMQTTFloatingPointSensors{
+        {"Monstera", "home/Monstera/soil_moisture_percent/retained"},
+        {"Ficus", "home/Ficus/soil_moisture_percent/retained"},
+        {"Calethea", "home/Calethea/soil_moisture_percent/retained"},
+        {"CitrusTree", "home/CitrusTree/soil_moisture_percent/retained"},
+    };
 
 }  // namespace credentials
 }  // namespace deskmate

@@ -8,7 +8,7 @@
 #include "deskmate/sdl2/gfx/display.h"
 #include "deskmate/sdl2/input/input_transcriber.h"
 
-using deskmate::gfx::screens::BarListItem;
+using deskmate::gfx::screens::VerticalBarListItem;
 using deskmate::gfx::screens::VerticalBarsList;
 using deskmate::sdl2::gfx::SDLDisplay;
 using deskmate::sdl2::input::InputTranscriber;
@@ -19,7 +19,7 @@ using deskmate::credentials::kDisplayWidth;
 using deskmate::credentials::kFontPath;
 
 // Testing only.
-class FakeBarItem : public BarListItem {
+class FakeBarItem : public VerticalBarListItem {
  public:
   FakeBarItem(const std::string& display_name, double percentage,
               bool is_filled)
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
   SDLIniter sdl_initer;
   SDLDisplay display(kDisplayHeight, kDisplayWidth, kFontPath);
 
-  std::vector<std::unique_ptr<BarListItem>> items;
+  std::vector<std::unique_ptr<VerticalBarListItem>> items;
   items.push_back(std::make_unique<FakeBarItem>("Calethea", 0.3723, true));
   items.push_back(std::make_unique<FakeBarItem>("Ficus", 0.972, true));
   items.push_back(std::make_unique<FakeBarItem>("Citrus", 0.05, true));

@@ -12,6 +12,7 @@ set(SRC
   src/deskmate/gfx/screens/vertical_bars_list.cc
   src/deskmate/gfx/screens/window.cc
   src/deskmate/gfx/components/mqtt_list_item.cc
+  src/deskmate/gfx/components/mqtt_vertical_bar_list_item.cc
   src/deskmate/mqtt/mqtt.cc
   src/deskmate/app/app.cc
 )

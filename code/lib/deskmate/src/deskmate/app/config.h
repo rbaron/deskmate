@@ -18,6 +18,11 @@ struct MQTTConfig {
   std::string state_topic;
 };
 
+struct MQTTFloatingPointSensorConfig {
+  std::string display_name;
+  std::string value_topic;
+};
+
 }  // namespace app
 }  // namespace deskmate
 
