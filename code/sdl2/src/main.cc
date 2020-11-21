@@ -1,10 +1,8 @@
 #include <iostream>
 #include <memory>
 
-#include "MQTTClient.h"
 #include "credentials.h"
 #include "deskmate/app/app.h"
-#include "deskmate/gfx/display.h"
 #include "deskmate/sdl2/gfx/display.h"
 #include "deskmate/sdl2/input/input_transcriber.h"
 #include "deskmate/sdl2/net/mqtt.h"
@@ -55,9 +53,6 @@ int main(int argc, char *argv[]) {
   }
 
   SDLDisplay display(kDisplayHeight, kDisplayWidth, kFontPath);
-  // display.Clear();
-  // display.FillCircle({60, 120}, 50, deskmate::gfx::Color::kBlack);
-  // display.Refresh();
 
   App app(&display, &mqtt_manager);
   app.Init(kMQTTConfigs);

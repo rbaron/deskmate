@@ -9,6 +9,7 @@ include_directories(src)
 set(SRC
   src/deskmate/gfx/display.cc
   src/deskmate/gfx/screens/list.cc
+  src/deskmate/gfx/screens/vertical_bars_list.cc
   src/deskmate/gfx/screens/window.cc
   src/deskmate/gfx/components/mqtt_list_item.cc
   src/deskmate/mqtt/mqtt.cc

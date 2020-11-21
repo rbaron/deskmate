@@ -18,6 +18,7 @@ find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_gfx REQUIRED)
 
 include_directories(
+  src
   ${SDL2_INCLUDE_DIRS}
   ${SDL2_TTF_INCLUDE_DIRS}
   ${SDL2_GFX_INCLUDE_DIRS}
@@ -40,6 +41,15 @@ add_executable(deskmate-sdl2 src/main.cc ${SRC})
 # Do we need to specify the extension .dylib here? Is there a better, cross-platform way
 # of doing this?
 target_link_libraries(deskmate-sdl2 deskmate
+  ${SDL2_LIBRARIES}
+  ${SDL2_TTF_LIBRARIES}
+  ${SDL2_GFX_LIBRARIES}
+  libpaho-mqtt3cs.dylib)
+
+
+# Samples
+add_executable(vertical-bars-list src/samples/vertical_bars_list.cc ${SRC})
+target_link_libraries(vertical-bars-list deskmate
   ${SDL2_LIBRARIES}
   ${SDL2_TTF_LIBRARIES}
   ${SDL2_GFX_LIBRARIES}

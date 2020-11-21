@@ -12,23 +12,26 @@ namespace deskmate {
 namespace gfx {
 namespace screens {
 
-class ListItem {
+class BarListItem {
  public:
-  virtual ~ListItem() = default;
-  virtual void Render(Display* display, bool is_selected) const = 0;
-  virtual void OnSelect() = 0;
+  virtual ~BarListItem() = default;
+  virtual const std::string& DisplayName() const = 0;
+  virtual double Percentage() const = 0;
+  virtual bool IsFilled() const = 0;
+  // Defaults to no-op.
+  virtual void OnSelect(){};
 };
 
-class ListScreen : public Screen {
+class VerticalBarsList : public Screen {
  public:
-  explicit ListScreen(std::vector<std::unique_ptr<ListItem>>& items)
+  explicit VerticalBarsList(std::vector<std::unique_ptr<BarListItem>>& items)
       : items_(std::move(items)), selected_(0), top_index_(0) {}
-  ~ListScreen() override;
+  ~VerticalBarsList() override;
   void HandleInputEvent(deskmate::input::InputEvent event) override;
   void Render(Display* display) const override;
 
  private:
-  std::vector<std::unique_ptr<ListItem>> items_;
+  std::vector<std::unique_ptr<BarListItem>> items_;
   std::size_t selected_;
   std::size_t top_index_;
 };
