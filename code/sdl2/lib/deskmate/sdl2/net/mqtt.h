@@ -58,6 +58,8 @@ class PahoMQTTManager : public MQTTMessageBuffer {
   bool IsConnected() const override;
   bool Process() override;
 
+  bool EnqueueForSending(const MQTTMessage& msg) override;
+
  private:
   bool SubscribeOnly(const std::string& topic) override;
   bool Publish(const MQTTMessage& msg) override;

@@ -105,6 +105,13 @@ bool PahoMQTTManager::Process() {
   return ProcessInner();
 };
 
+bool PahoMQTTManager::EnqueueForSending(const MQTTMessage& msg) {
+  std::lock_guard<std::mutex> guard(lock_);
+  out_queue_.push(msg);
+  return true;
+}
+
+
 // Static callback. context is the address of a PahoMQTTManager instance.
 int PahoMQTTManager::OnMessageReceived(void* context, char* topic,
                                        int topic_len,

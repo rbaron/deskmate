@@ -17,7 +17,7 @@ class MQTTListItem : public deskmate::gfx::screens::ListItem,
   MQTTListItem(const std::string& display_name,
                const std::string& command_topic,
                const std::string& subscription_topic,
-               deskmate::mqtt::MQTTMessageQueue* mqtt_out_queue);
+               deskmate::mqtt::MQTTMessageBuffer* mqtt_buffer);
 
   void Render(deskmate::gfx::Display* display, bool is_selected) const override;
 
@@ -31,7 +31,7 @@ class MQTTListItem : public deskmate::gfx::screens::ListItem,
   std::string display_name_;
   std::string command_topic_;
   std::string subscription_topic_;
-  deskmate::mqtt::MQTTMessageQueue* mqtt_out_queue_;
+  deskmate::mqtt::MQTTMessageBuffer* mqtt_buffer_;
   bool on_ = false;
 };
 

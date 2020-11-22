@@ -39,7 +39,7 @@ std::unique_ptr<VerticalBarsList> MakePlantsDashboard(
   std::vector<std::unique_ptr<VerticalBarListItem>> items;
   for (const auto &config : sensor_configs) {
     auto item = std::make_unique<MQTTVerticalBarListItem>(
-        config.display_name, config.value_topic, mqtt_buffer->OutputQueue());
+        config.display_name, config.value_topic);
     mqtt_buffer->Subscribe(item.get());
     items.push_back(std::move(item));
   }
@@ -54,7 +54,7 @@ bool App::Init(const std::vector<MQTTConfig> &mqtt_configs, const std::vector<MQ
   for (const auto &cfg : mqtt_configs) {
     std::unique_ptr<MQTTListItem> list_item = std::make_unique<MQTTListItem>(
         cfg.display_name, cfg.command_topic, cfg.state_topic,
-        mqtt_buffer_->OutputQueue());
+        mqtt_buffer_);
     mqtt_buffer_->Subscribe(list_item.get());
     left_list_items.push_back(std::move(list_item));
   }

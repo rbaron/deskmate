@@ -44,6 +44,11 @@ bool MQTTManager::Process() {
   return ProcessInner();
 }
 
+bool MQTTManager::EnqueueForSending(const MQTTMessage& msg) {
+  out_queue_.push(msg);
+  return true;
+}
+
 bool MQTTManager::SubscribeOnly(const std::string& topic) {
   return pubsub_client_->subscribe(topic.c_str());
 }

@@ -44,7 +44,7 @@ class MQTTMessageBuffer {
   // when the connection is restablished.
   bool Subscribe(MQTTSubscriber* subscriber);
 
-  MQTTMessageQueue* OutputQueue() { return &out_queue_; }
+  virtual bool EnqueueForSending(const MQTTMessage& msg) = 0;
 
  protected:
   // Sends the received message to registered callbacks. If the derived class
@@ -57,6 +57,8 @@ class MQTTMessageBuffer {
   // 2. Publishes all outgoing messages from the output queue.
   bool ProcessInner();
 
+  MQTTMessageQueue out_queue_;
+
  private:
   // Simply handles a subscription. Do not care about re-subscribing.
   virtual bool SubscribeOnly(const std::string& topic) = 0;
@@ -68,8 +70,6 @@ class MQTTMessageBuffer {
   // connection drop.
   std::unordered_map<std::string, std::vector<MQTTSubscriber*>>
       subscribers_by_topic_;
-
-  MQTTMessageQueue out_queue_;
 };
 
 }  // namespace mqtt

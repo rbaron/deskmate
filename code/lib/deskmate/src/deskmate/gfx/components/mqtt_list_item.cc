@@ -15,7 +15,7 @@ using deskmate::gfx::Rect;
 using deskmate::gfx::Size;
 using deskmate::gfx::screens::ListItem;
 using deskmate::mqtt::MQTTMessage;
-using deskmate::mqtt::MQTTMessageQueue;
+using deskmate::mqtt::MQTTMessageBuffer;
 using deskmate::mqtt::MQTTSubscriber;
 
 constexpr unsigned int kCircleRadius = 8;
@@ -25,11 +25,11 @@ constexpr unsigned int kPadding = 10;
 MQTTListItem::MQTTListItem(const std::string& display_name,
                            const std::string& command_topic,
                            const std::string& subscription_topic,
-                           MQTTMessageQueue* mqtt_out_queue)
+                           MQTTMessageBuffer* mqtt_buffer)
     : display_name_(display_name),
       command_topic_(command_topic),
       subscription_topic_(subscription_topic),
-      mqtt_out_queue_(mqtt_out_queue) {}
+      mqtt_buffer_(mqtt_buffer) {}
 
 void MQTTListItem::Render(Display* display, bool is_selected) const {
   const unsigned int char_scale = 2;
@@ -53,7 +53,7 @@ void MQTTListItem::Render(Display* display, bool is_selected) const {
 }
 
 void MQTTListItem::OnSelect() {
-  mqtt_out_queue_->push({command_topic_, on_ ? "OFF" : "ON"});
+  mqtt_buffer_->EnqueueForSending({command_topic_, on_ ? "OFF" : "ON"});
 }
 
 std::string MQTTListItem::GetSubscriptionTopic() const {

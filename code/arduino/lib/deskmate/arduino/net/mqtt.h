@@ -22,8 +22,8 @@ using deskmate::mqtt::MQTTMessageQueue;
 // The PubSubClient reads network packets only upon calling the loop() function:
 // https://github.com/knolleary/pubsubclient/blob/v2.8/src/PubSubClient.cpp#L389
 // This means we don't need to coordinate access to the base class input queue:
-// We can let loop() populate the input queue and later we can dispatch the input-
-// enqueued messages to their registered MQTTSubscribers.
+// We can let loop() populate the input queue and later we can dispatch the
+// input- enqueued messages to their registered MQTTSubscribers.
 class MQTTManager : public MQTTMessageBuffer {
  public:
   MQTTManager(const char* server, int port, const char* username,
@@ -32,6 +32,7 @@ class MQTTManager : public MQTTMessageBuffer {
   bool Connect() override;
   bool IsConnected() const override;
   bool Process() override;
+  bool EnqueueForSending(const MQTTMessage& msg) override;
 
  private:
   // Simply handles a subscription. Do not care about re-subscribing.

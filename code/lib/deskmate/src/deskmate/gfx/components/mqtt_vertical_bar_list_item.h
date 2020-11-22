@@ -18,8 +18,7 @@ class MQTTVerticalBarListItem
       public deskmate::mqtt::MQTTSubscriber {
  public:
   MQTTVerticalBarListItem(const std::string& display_name,
-                          const std::string& subscription_topic,
-                          deskmate::mqtt::MQTTMessageQueue* mqtt_out_queue);
+                          const std::string& subscription_topic);
 
   std::string GetSubscriptionTopic() const override;
 
@@ -32,7 +31,6 @@ class MQTTVerticalBarListItem
 
   std::string display_name_;
   std::string value_topic_;
-  deskmate::mqtt::MQTTMessageQueue* mqtt_out_queue_;
   bool is_available_ = false;
   double percentage_ = 0;
 };

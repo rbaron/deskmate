@@ -1,7 +1,7 @@
 #include "deskmate/gfx/components/mqtt_vertical_bar_list_item.h"
 
-#include <string>
 #include <iostream>
+#include <string>
 
 #include "deskmate/gfx/display.h"
 #include "deskmate/gfx/screens/vertical_bars_list.h"
@@ -14,11 +14,8 @@ namespace components {
 // Represents a VerticalBarListItem that listens to a MQTT topic containing a
 // floating point.
 MQTTVerticalBarListItem::MQTTVerticalBarListItem(
-    const std::string& display_name, const std::string& value_topic,
-    deskmate::mqtt::MQTTMessageQueue* mqtt_out_queue)
-    : display_name_(display_name),
-      value_topic_(value_topic),
-      mqtt_out_queue_(mqtt_out_queue) {}
+    const std::string& display_name, const std::string& value_topic)
+    : display_name_(display_name), value_topic_(value_topic) {}
 
 std::string MQTTVerticalBarListItem::GetSubscriptionTopic() const {
   return value_topic_;
