@@ -54,3 +54,10 @@ target_link_libraries(vertical-bars-list deskmate
   ${SDL2_TTF_LIBRARIES}
   ${SDL2_GFX_LIBRARIES}
   libpaho-mqtt3cs.dylib)
+
+add_executable(simple-list src/samples/simple_list.cc ${SRC})
+target_link_libraries(simple-list deskmate
+  ${SDL2_LIBRARIES}
+  ${SDL2_TTF_LIBRARIES}
+  ${SDL2_GFX_LIBRARIES}
+  libpaho-mqtt3cs.dylib)

@@ -1,6 +1,7 @@
 #ifndef DESKMATE_GFX_COMPONENTS_TEXT_LIST_ITEM_H
 #define DESKMATE_GFX_COMPONENTS_TEXT_LIST_ITEM_H
 
+#include "deskmate/gfx/constants.h"
 #include "deskmate/gfx/screens/list.h"
 
 namespace deskmate {
@@ -8,6 +9,7 @@ namespace gfx {
 namespace components {
 
 namespace {
+using deskmate::gfx::constants::kPadding;
 using deskmate::gfx::screens::ListItem;
 }  // namespace
 
@@ -27,7 +29,9 @@ class TextListItem : public ListItem {
       text = text.substr(0, size.width / (char_scale * char_size.width) - 1);
       text += ".";
     }
-    display->PutText(0, 0, text, char_scale, is_selected ? Color::kWhite : Color::kBlack,
+    display->PutText(kPadding,
+                     (size.height - char_scale * char_size.height) / 2, text,
+                     char_scale, is_selected ? Color::kWhite : Color::kBlack,
                      is_selected ? Color::kBlack : Color::kWhite);
   }
 
