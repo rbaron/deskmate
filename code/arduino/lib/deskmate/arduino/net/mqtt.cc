@@ -16,16 +16,16 @@ using deskmate::mqtt::MQTTMessage;
 MQTTManager::MQTTManager(const char* server, int port, const char* username,
                          const char* password, const char* client_id)
     : username_(username), password_(password), client_id_(client_id) {
-  // Register the "On new message" callback, which puts the message into
-  // this->InputQueue().
+  // Register the "On new message" callback, which calls Dispatch.
+  // No fancy synchronization is needed here, since this callback only
+  // runs when we call loop() in our main... loop. In other works, there
+  // is no other thread.
   pubsub_client_ = std::make_unique<PubSubClient>(
       server, port,
       [this](const char* topic, byte* payload, unsigned int length) {
         std::string str_payload =
             std::string(reinterpret_cast<char*>(payload), length);
-        Serial.printf("Got mqtt message %s -> %s\n", topic,
-                      str_payload.c_str());
-        this->InputQueue()->push({topic, str_payload});
+        this->Dispatch({topic, str_payload});
       },
       wifi_client_);
 }
@@ -37,7 +37,12 @@ bool MQTTManager::Connect() {
 
 bool MQTTManager::IsConnected() const { return pubsub_client_->connected(); }
 
-bool MQTTManager::OnProcess() { return pubsub_client_->loop(); }
+bool MQTTManager::Process() {
+  if (!pubsub_client_->loop()) {
+    return false;
+  }
+  return ProcessInner();
+}
 
 bool MQTTManager::SubscribeOnly(const std::string& topic) {
   return pubsub_client_->subscribe(topic.c_str());

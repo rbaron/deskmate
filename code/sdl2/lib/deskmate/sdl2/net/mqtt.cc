@@ -5,6 +5,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <mutex>
 
 #include "MQTTClient.h"
 
@@ -87,10 +88,8 @@ bool PahoMQTTManager::IsConnected() const {
 bool PahoMQTTManager::SubscribeOnly(const std::string& topic) {
   int ret = MQTTClient_subscribe(*mqtt_client_, topic.c_str(), kQoS);
   if (ret != MQTTCLIENT_SUCCESS) {
-    std::cerr << "Failed to subscribe: " << ret << std::endl;
     return false;
   }
-  std::cerr << "Subscribed to: " << topic << std::endl;
   return true;
 }
 
@@ -101,17 +100,24 @@ bool PahoMQTTManager::Publish(const MQTTMessage& msg) {
                             /*dt=*/nullptr) == MQTTCLIENT_SUCCESS;
 }
 
+bool PahoMQTTManager::Process() {
+  std::lock_guard<std::mutex> guard(lock_);
+  return ProcessInner();
+};
+
 // Static callback. context is the address of a PahoMQTTManager instance.
 int PahoMQTTManager::OnMessageReceived(void* context, char* topic,
                                        int topic_len,
                                        MQTTClient_message* message) {
   if (context) {
     PahoMQTTManager* instance = static_cast<PahoMQTTManager*>(context);
-    instance->InputQueue()->push(
-        // topic_len is only set if there is a \0 in topic.
-        {std::string(topic, topic_len > 0 ? topic_len : std::strlen(topic)),
-         std::string(static_cast<char*>(message->payload),
-                     message->payloadlen)});
+    const MQTTMessage msg{
+        std::string(topic, topic_len > 0 ? topic_len : std::strlen(topic)),
+        std::string(static_cast<char*>(message->payload), message->payloadlen)};
+    {
+      std::lock_guard<std::mutex> guard(instance->lock_);
+      instance->Dispatch(msg);
+    }
   }
   MQTTClient_free(topic);
   MQTTClient_freeMessage(&message);

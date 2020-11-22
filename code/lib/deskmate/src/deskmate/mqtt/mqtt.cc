@@ -8,29 +8,27 @@
 namespace deskmate {
 namespace mqtt {
 
-bool MQTTMessageBuffer::Process() {
+bool MQTTMessageBuffer::ProcessInner() {
   if (!IsConnected()) {
-    // std::cerr << "Not connected. Will reco\n";
     if (!Connect()) {
       return false;
     }
-    // TODO: better error handling when re-subscribing.
     // Re-subscribe to topics.
-    std::for_each(subscribed_topics_.cbegin(), subscribed_topics_.cend(),
-                  [this](const std::string& topic) { Subscribe(topic); });
+    // TODO: better error handling when re-subscribing.
+    std::for_each(
+        subscribers_by_topic_.cbegin(), subscribers_by_topic_.cend(),
+        [this](
+            const std::pair<std::string, std::vector<MQTTSubscriber*>>& pair) {
+          std::for_each(
+              pair.second.cbegin(), pair.second.cend(),
+              [this](MQTTSubscriber* subscriber) { Subscribe(subscriber); });
+        });
   }
-
-  OnProcess();
 
   // Send messages.
   while (!out_queue_.empty()) {
     const MQTTMessage& msg = out_queue_.front();
-    // std::cout << "Will send message: " << msg.topic << " -> " << msg.payload
-    //           << )td::endl;
-    if (Publish(msg)) {
-      // std::cout << "Sent!\n";
-    } else {
-      // std::cout << "Failed!\n";
+    if (!Publish(msg)) {
       return false;
     }
     out_queue_.pop();
@@ -38,12 +36,22 @@ bool MQTTMessageBuffer::Process() {
   return true;
 }
 
-bool MQTTMessageBuffer::Subscribe(const std::string& topic) {
+bool MQTTMessageBuffer::Subscribe(MQTTSubscriber* subscriber) {
+  const std::string& topic = subscriber->GetSubscriptionTopic();
   if (SubscribeOnly(topic)) {
-    subscribed_topics_.push_back(topic);
+    subscribers_by_topic_[topic].push_back(subscriber);
     return true;
   }
   return false;
+}
+
+bool MQTTMessageBuffer::Dispatch(const MQTTMessage& msg) {
+  if (subscribers_by_topic_.count(msg.topic) > 0) {
+    for (MQTTSubscriber* subscriber : subscribers_by_topic_[msg.topic]) {
+      subscriber->HandleMessage(msg);
+    }
+  }
+  return true;
 }
 
 }  // namespace mqtt

@@ -40,9 +40,7 @@ std::unique_ptr<VerticalBarsList> MakePlantsDashboard(
   for (const auto &config : sensor_configs) {
     auto item = std::make_unique<MQTTVerticalBarListItem>(
         config.display_name, config.value_topic, mqtt_buffer->OutputQueue());
-    // TODO: handle re-subscription after disconnection.
-    mqtt_buffer->Subscribe(config.value_topic);
-    mqtt_subscribers->push_back(item.get());
+    mqtt_buffer->Subscribe(item.get());
     items.push_back(std::move(item));
   }
   return std::make_unique<VerticalBarsList>(items);
@@ -57,8 +55,7 @@ bool App::Init(const std::vector<MQTTConfig> &mqtt_configs, const std::vector<MQ
     std::unique_ptr<MQTTListItem> list_item = std::make_unique<MQTTListItem>(
         cfg.display_name, cfg.command_topic, cfg.state_topic,
         mqtt_buffer_->OutputQueue());
-    mqtt_subscribers_.push_back(list_item.get());
-    mqtt_buffer_->Subscribe(cfg.state_topic);
+    mqtt_buffer_->Subscribe(list_item.get());
     left_list_items.push_back(std::move(list_item));
   }
   std::unique_ptr<ListScreen> left_split =
@@ -82,14 +79,14 @@ bool App::Init(const std::vector<MQTTConfig> &mqtt_configs, const std::vector<MQ
 
 bool App::Tick() {
   mqtt_buffer_->Process();
-  auto *mqtt_in_queue = mqtt_buffer_->InputQueue();
-  while (!mqtt_in_queue->empty()) {
-    const MQTTMessage &msg = mqtt_in_queue->front();
-    for (auto mqtt_subscriber : mqtt_subscribers_) {
-      mqtt_subscriber->HandleMessage(msg);
-    }
-    mqtt_in_queue->pop();
-  }
+  // auto *mqtt_in_queue = mqtt_buffer_->InputQueue();
+  // while (!mqtt_in_queue->empty()) {
+  //   const MQTTMessage &msg = mqtt_in_queue->front();
+  //   for (auto mqtt_subscriber : mqtt_subscribers_) {
+  //     mqtt_subscriber->HandleMessage(msg);
+  //   }
+  //   mqtt_in_queue->pop();
+  // }
   display_->Clear();
   window_->Render(display_);
   display_->Refresh();
