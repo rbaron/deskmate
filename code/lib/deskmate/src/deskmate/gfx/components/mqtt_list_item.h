@@ -15,22 +15,21 @@ class MQTTListItem : public deskmate::gfx::screens::ListItem,
                      public deskmate::mqtt::MQTTSubscriber {
  public:
   MQTTListItem(const std::string& display_name,
-               const std::string& command_topic,
-               const std::string& subscription_topic,
+               const std::string& command_topic, const std::string& state_topic,
                deskmate::mqtt::MQTTMessageBuffer* mqtt_buffer);
 
   void Render(deskmate::gfx::Display* display, bool is_selected) const override;
 
   void OnSelect() override;
 
-  std::string GetSubscriptionTopic() const override;
+  void HandleMessage(const deskmate::mqtt::MQTTMessage& msg) override;
+
+  const std::vector<std::string> SubscriptionTopics() const override;
 
  private:
-  void HandleOwnMessage(const deskmate::mqtt::MQTTMessage& msg) override;
-
   std::string display_name_;
   std::string command_topic_;
-  std::string subscription_topic_;
+  std::string state_topic_;
   deskmate::mqtt::MQTTMessageBuffer* mqtt_buffer_;
   bool on_ = false;
 };

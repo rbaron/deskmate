@@ -16,16 +16,8 @@ struct MQTTMessage {
 class MQTTSubscriber {
  public:
   virtual ~MQTTSubscriber() = default;
-  virtual std::string GetSubscriptionTopic() const = 0;
-
-  void HandleMessage(const MQTTMessage& msg) {
-    if (msg.topic == GetSubscriptionTopic()) {
-      HandleOwnMessage(msg);
-    }
-  }
-
- private:
-  virtual void HandleOwnMessage(const MQTTMessage& msg) = 0;
+  virtual void HandleMessage(const MQTTMessage& msg) = 0;
+  virtual const std::vector<std::string> SubscriptionTopics() const = 0;
 };
 
 using MQTTMessageQueue = std::queue<MQTTMessage>;

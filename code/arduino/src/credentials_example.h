@@ -54,10 +54,10 @@ const std::vector<MQTTConfig> kMQTTConfigs{
 // MQTT-powered floating point sensors.
 const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
     kMQTTFloatingPointSensors{
-        {"Monstera", "home/Monstera/soil_moisture_percent/retained"},
-        {"Ficus", "home/Ficus/soil_moisture_percent/retained"},
-        {"Calethea", "home/Calethea/soil_moisture_percent/retained"},
-        {"CitrusTree", "home/CitrusTree/soil_moisture_percent/retained"},
+        {"Monstera", "home/Monstera/soil_moisture_percent/retained",
+         "home/Monstera/availability"},
+        {"Ficus", "home/Ficus/soil_moisture_percent/retained",
+         "home/Ficus/availability"},
     };
 
 }  // namespace credentials

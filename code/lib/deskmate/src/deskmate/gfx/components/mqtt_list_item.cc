@@ -24,11 +24,11 @@ constexpr unsigned int kPadding = 10;
 
 MQTTListItem::MQTTListItem(const std::string& display_name,
                            const std::string& command_topic,
-                           const std::string& subscription_topic,
+                           const std::string& state_topic,
                            MQTTMessageBuffer* mqtt_buffer)
     : display_name_(display_name),
       command_topic_(command_topic),
-      subscription_topic_(subscription_topic),
+      state_topic_(state_topic),
       mqtt_buffer_(mqtt_buffer) {}
 
 void MQTTListItem::Render(Display* display, bool is_selected) const {
@@ -56,11 +56,11 @@ void MQTTListItem::OnSelect() {
   mqtt_buffer_->EnqueueForSending({command_topic_, on_ ? "OFF" : "ON"});
 }
 
-std::string MQTTListItem::GetSubscriptionTopic() const {
-  return subscription_topic_;
+const std::vector<std::string> MQTTListItem::SubscriptionTopics() const {
+  return {state_topic_};
 }
 
-void MQTTListItem::HandleOwnMessage(const MQTTMessage& msg) {
+void MQTTListItem::HandleMessage(const MQTTMessage& msg) {
   on_ = msg.payload == "ON";
 }
 

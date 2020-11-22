@@ -33,13 +33,13 @@ using deskmate::mqtt::MQTTMessageBuffer;
 using deskmate::mqtt::MQTTSubscriber;
 
 std::unique_ptr<VerticalBarsList> MakePlantsDashboard(
-    const std::vector<MQTTFloatingPointSensorConfig>& sensor_configs,
+    const std::vector<MQTTFloatingPointSensorConfig> &sensor_configs,
     MQTTMessageBuffer *mqtt_buffer,
     std::vector<MQTTSubscriber *> *mqtt_subscribers) {
   std::vector<std::unique_ptr<VerticalBarListItem>> items;
   for (const auto &config : sensor_configs) {
     auto item = std::make_unique<MQTTVerticalBarListItem>(
-        config.display_name, config.value_topic);
+        config.display_name, config.value_topic, config.availability_topic);
     mqtt_buffer->Subscribe(item.get());
     items.push_back(std::move(item));
   }
@@ -48,13 +48,14 @@ std::unique_ptr<VerticalBarsList> MakePlantsDashboard(
 
 }  // namespace
 
-bool App::Init(const std::vector<MQTTConfig> &mqtt_configs, const std::vector<MQTTFloatingPointSensorConfig> sensor_configs) {
+bool App::Init(
+    const std::vector<MQTTConfig> &mqtt_configs,
+    const std::vector<MQTTFloatingPointSensorConfig> sensor_configs) {
   // Left split.
   std::vector<std::unique_ptr<ListItem>> left_list_items;
   for (const auto &cfg : mqtt_configs) {
     std::unique_ptr<MQTTListItem> list_item = std::make_unique<MQTTListItem>(
-        cfg.display_name, cfg.command_topic, cfg.state_topic,
-        mqtt_buffer_);
+        cfg.display_name, cfg.command_topic, cfg.state_topic, mqtt_buffer_);
     mqtt_buffer_->Subscribe(list_item.get());
     left_list_items.push_back(std::move(list_item));
   }
@@ -69,9 +70,10 @@ bool App::Init(const std::vector<MQTTConfig> &mqtt_configs, const std::vector<MQ
   std::vector<WindowedScreen> windowed_screens;
   windowed_screens.push_back(
       {std::move(left_split), {{0, 0}, {size.height, size.width / 2}}, true});
-  windowed_screens.push_back({std::move(plants_dashboard),
-                              {{0, size.width / 2}, {size.height / 2, size.width / 2}},
-                              true});
+  windowed_screens.push_back(
+      {std::move(plants_dashboard),
+       {{0, size.width / 2}, {size.height / 2, size.width / 2}},
+       true});
 
   window_ = std::make_unique<Window>(windowed_screens);
   return true;

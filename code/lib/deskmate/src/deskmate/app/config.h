@@ -21,6 +21,7 @@ struct MQTTConfig {
 struct MQTTFloatingPointSensorConfig {
   std::string display_name;
   std::string value_topic;
+  std::string availability_topic;
 };
 
 }  // namespace app

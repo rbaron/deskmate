@@ -36,13 +36,14 @@ bool MQTTMessageBuffer::ProcessInner() {
   return true;
 }
 
+// TODO: Error handling.
 bool MQTTMessageBuffer::Subscribe(MQTTSubscriber* subscriber) {
-  const std::string& topic = subscriber->GetSubscriptionTopic();
-  if (SubscribeOnly(topic)) {
-    subscribers_by_topic_[topic].push_back(subscriber);
-    return true;
+  for (const auto& topic : subscriber->SubscriptionTopics()) {
+    if (SubscribeOnly(topic)) {
+      subscribers_by_topic_[topic].push_back(subscriber);
+    }
   }
-  return false;
+  return true;
 }
 
 bool MQTTMessageBuffer::Dispatch(const MQTTMessage& msg) {
