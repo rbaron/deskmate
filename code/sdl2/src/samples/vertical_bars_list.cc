@@ -1,7 +1,9 @@
 #include "deskmate/gfx/screens/vertical_bars_list.h"
 
+#include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <random>
 #include <vector>
 
 #include "credentials.h"
@@ -52,14 +54,18 @@ class SDLIniter {
 };
 
 int main(int argc, char* argv[]) {
+  std::srand(0);
+
   SDLIniter sdl_initer;
   SDLDisplay display(kDisplayHeight, kDisplayWidth, kFontPath);
 
   std::vector<std::unique_ptr<VerticalBarListItem>> items;
-  items.push_back(std::make_unique<FakeBarItem>("Calethea", 0.3723, true));
-  items.push_back(std::make_unique<FakeBarItem>("Ficus", 0.972, true));
-  items.push_back(std::make_unique<FakeBarItem>("Citrus", 0.05, true));
-  items.push_back(std::make_unique<FakeBarItem>("Pilea", 0.55, false));
+  for (int i = 0; i < 15; i++) {
+    items.push_back(std::make_unique<FakeBarItem>(
+        "Item #" + std::to_string(i),
+        /*percentage=*/static_cast<double>(std::rand() % 100) / 100,
+        /*is_filled=*/rand() % 2 == 0));
+  }
 
   VerticalBarsList screen(items);
 

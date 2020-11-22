@@ -24,8 +24,6 @@ void ListScreen::HandleInputEvent(InputEvent event) {
   switch (event) {
     case InputEvent::kCrankCW:
       selected_ = selected_ < items_.size() - 1 ? selected_ + 1 : selected_;
-      // If the end of the selected element is bigger, scroll
-      // if ((selected_ + 1) * kItemHeight)
       last_scroll_ = event;
       break;
     case InputEvent::kCrankCCW:

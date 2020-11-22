@@ -34,7 +34,11 @@ class VerticalBarsList : public Screen {
  private:
   std::vector<std::unique_ptr<VerticalBarListItem>> items_;
   std::size_t selected_;
-  std::size_t top_index_;
+
+  // These are internal states which can be updated from a const reference.
+  mutable std::size_t top_index_;
+  mutable deskmate::input::InputEvent last_scroll_ =
+      deskmate::input::InputEvent::kUnknown;
 };
 
 }  // namespace screens

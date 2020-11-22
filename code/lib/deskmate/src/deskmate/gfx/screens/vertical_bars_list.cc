@@ -23,14 +23,15 @@ constexpr unsigned int kSelectorRadius = 8;
 
 VerticalBarsList::~VerticalBarsList() = default;
 
-// TODO: handle horizontal scroll.
 void VerticalBarsList::HandleInputEvent(InputEvent event) {
   switch (event) {
     case InputEvent::kCrankCW:
       selected_ = selected_ < items_.size() - 1 ? selected_ + 1 : selected_;
+      last_scroll_ = event;
       break;
     case InputEvent::kCrankCCW:
       selected_ = selected_ > 0 ? selected_ - 1 : 0;
+      last_scroll_ = event;
       break;
     case InputEvent::kAPush:
       items_[selected_]->OnSelect();
@@ -40,9 +41,25 @@ void VerticalBarsList::HandleInputEvent(InputEvent event) {
   }
 }
 
+// TODO: for the love of god refactor this mess.
 void VerticalBarsList::Render(Display* display) const {
   uint8_t font_scale = 2;
   const Size& window_size = display->GetSize();
+
+  const unsigned int item_width = 4 * kPadding;
+
+  // Maybe scroll.
+  if (last_scroll_ == InputEvent::kCrankCW) {
+    if ((selected_ - top_index_ + 1) * item_width > window_size.width) {
+      top_index_++;
+    }
+  } else if (last_scroll_ == InputEvent::kCrankCCW) {
+    if (selected_ < top_index_) {
+      top_index_ = selected_;
+    }
+  }
+  last_scroll_ = InputEvent::kUnknown;
+
   display->PushWindow({{kPadding, kPadding},
                        {window_size.height, window_size.width - 2 * kPadding}});
 
@@ -56,25 +73,27 @@ void VerticalBarsList::Render(Display* display) const {
       inner_size.height - text_height - selector_height - divider_height;
 
   const unsigned int offset_x = kPadding;
-  // TODO: better automatic layout. Ideas:
-  // * Center bars
-  // * Automatically set bars widths
+
   Rect bar_rect;
   bar_rect.size.width = 2 * kPadding;
-  for (int i = 0; i < items_.size(); i++) {
-    bar_rect.point.x = offset_x + i * 2 * bar_rect.size.width;
+  for (size_t index = top_index_;
+       index < items_.size() &&
+       (index - top_index_) * item_width < display->GetSize().width;
+       index++) {
+    bar_rect.point.x =
+        offset_x + (index - top_index_) * 2 * bar_rect.size.width;
     unsigned int percentage_in_pixels =
-        items_[i]->Percentage() * (bottom_bars_y - top_bars_y);
+        items_[index]->Percentage() * (bottom_bars_y - top_bars_y);
     bar_rect.point.y = bottom_bars_y - percentage_in_pixels;
     // +1 to ensure it aligns nicely with the divider.
     bar_rect.size.height = percentage_in_pixels + 1;
-    if (items_[i]->IsFilled()) {
+    if (items_[index]->IsFilled()) {
       display->FillRect(bar_rect, Color::kBlack);
     } else {
       display->DrawRect(bar_rect, Color::kBlack);
     }
 
-    if (i == selected_) {
+    if (index == selected_) {
       Point selector_center{
           bottom_bars_y + divider_height + kPadding + kSelectorRadius,
           bar_rect.point.x + bar_rect.size.width / 2,
@@ -97,7 +116,8 @@ void VerticalBarsList::Render(Display* display) const {
   const std::string percentage_str = std::to_string(percentage) + "%";
   display->PutText(
       divider_rect.point.y + divider_rect.size.height + selector_height,
-      inner_size.width - percentage_str.length() * font_scale * display->GetCharSize().width,
+      inner_size.width -
+          percentage_str.length() * font_scale * display->GetCharSize().width,
       percentage_str, font_scale, Color::kBlack);
 
   // Pop the padded window.
