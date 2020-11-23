@@ -15,7 +15,9 @@ using deskmate::gfx::Rect;
 using deskmate::input::InputEvent;
 
 constexpr unsigned int kItemHeight = 32;
-// constexpr unsigned int kFontScale = 2;
+
+// Scrollbar
+constexpr unsigned int kScrollBarWidth = 4;
 }  // namespace
 
 ListScreen::~ListScreen() {}
@@ -39,6 +41,11 @@ void ListScreen::HandleInputEvent(InputEvent event) {
 }
 
 void ListScreen::Render(Display* display) const {
+  if (items_.empty()) {
+    display->PutText(0, 0, "<Empty>", /*scale=*/2, Color::kBlack);
+    return;
+  }
+
   const Size& window_size = display->GetSize();
 
   // Maybe scroll.
@@ -53,16 +60,33 @@ void ListScreen::Render(Display* display) const {
   }
   last_scroll_ = InputEvent::kUnknown;
 
-  for (size_t index = top_index_;
-       index < items_.size() &&
-       (index - top_index_) * kItemHeight < display->GetSize().height;
-       index++) {
-    Rect item_window{
-        Point{static_cast<unsigned int>((index - top_index_) * kItemHeight), 0},
-        {kItemHeight, window_size.width}};
+  // We only show whole items for now.
+  const int n_items_to_show = window_size.height / kItemHeight;
+
+  const bool draw_scrollbar =
+      items_.size() > 1 && items_.size() > n_items_to_show;
+
+  for (int i = 0; i < n_items_to_show && i + top_index_ < items_.size(); i++) {
+    int item_index = i + top_index_;
+    Rect item_window{Point{static_cast<unsigned int>(i * kItemHeight), 0},
+                     {kItemHeight, window_size.width -
+                                       (draw_scrollbar ? kScrollBarWidth : 0)}};
     display->PushWindow(item_window);
-    items_[index]->Render(display, index == selected_);
+    items_[i + top_index_]->Render(display, item_index == selected_);
     display->PopWindow();
+  }
+
+  // Draw scrollbar.
+  if (draw_scrollbar) {
+    const unsigned int scrollbar_height = static_cast<double>(n_items_to_show) /
+                                          items_.size() * window_size.height;
+    const unsigned int scrollbar_top_pixel =
+        static_cast<double>(window_size.height - scrollbar_height) /
+        (items_.size() - n_items_to_show) * top_index_;
+    Rect scroll_rect{
+        Point{scrollbar_top_pixel, window_size.width - kScrollBarWidth},
+        {scrollbar_height, kScrollBarWidth}};
+    display->FillRect(scroll_rect, Color::kBlack);
   }
 }
 

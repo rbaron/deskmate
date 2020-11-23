@@ -19,9 +19,7 @@ bool MQTTMessageBuffer::ProcessInner() {
         subscribers_by_topic_.cbegin(), subscribers_by_topic_.cend(),
         [this](
             const std::pair<std::string, std::vector<MQTTSubscriber*>>& pair) {
-          std::for_each(
-              pair.second.cbegin(), pair.second.cend(),
-              [this](MQTTSubscriber* subscriber) { Subscribe(subscriber); });
+          SubscribeOnly(pair.first);
         });
   }
 

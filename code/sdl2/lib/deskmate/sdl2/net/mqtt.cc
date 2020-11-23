@@ -17,21 +17,11 @@ using deskmate::mqtt::MQTTMessage;
 using deskmate::mqtt::MQTTMessageBuffer;
 using deskmate::mqtt::MQTTMessageQueue;
 
-// TODO: test connection drop/restablish.
 constexpr bool kCleanSession = true;
 constexpr int kKeepAliveIntervalSecs = 20;
 // Quality of service 0 just so we match the Arduino implementation.
 constexpr int kQoS = 0;
 
-// TODO: there's a bug here:
-// While in normal operation, disconnect from the network. After
-// `kKeepAliveIntervalSecs`, Paho's MQTT connection will drop. But when
-// switching the connection on again, Paho will try to reconnect and some weird
-// stuff happens. I suspect it's because the old connection was never properly
-// closed, so the MQTT server things it's still there. And when a new connection
-// with the same client ID is stablished, the MQTT server drops should drop the
-// old one (since the client IDs have to be unique), but somehow it affects the
-// new connection. Maybe I'm not cleaning things up properly.
 void OnConnLost(void* context, char* cause) {
   std::cerr << "MQTT connection lost!\n";
 }

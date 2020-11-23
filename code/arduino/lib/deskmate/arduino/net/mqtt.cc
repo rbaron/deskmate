@@ -31,16 +31,18 @@ MQTTManager::MQTTManager(const char* server, int port, const char* username,
 }
 
 bool MQTTManager::Connect() {
+  Serial.println("pubsubclient will try to connect");
   return pubsub_client_->connect(client_id_.c_str(), username_.c_str(),
                                  password_.c_str());
 }
 
-bool MQTTManager::IsConnected() const { return pubsub_client_->connected(); }
+bool MQTTManager::IsConnected() const {
+  return pubsub_client_->connected();
+}
 
 bool MQTTManager::Process() {
-  if (!pubsub_client_->loop()) {
-    return false;
-  }
+  // This may return false if not connected.
+  !pubsub_client_->loop();
   return ProcessInner();
 }
 
