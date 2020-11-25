@@ -12,29 +12,20 @@ namespace screens {
 namespace {
 using deskmate::gfx::Color;
 using deskmate::gfx::Rect;
+using deskmate::gfx::Size;
 using deskmate::input::InputEvent;
 
 // Padding inside WindowedScreens.
 constexpr unsigned int kPadding = 1;
+constexpr unsigned int kFocusMarkWidth = 12;
 
-// TODO: use a circular linked list and get rid of this questionable
-// implementation.
 int FindNextFocusableIndex(const std::vector<WindowedScreen>& wss,
-                           int currently_focused) {
-  // After.
-  for (int i = currently_focused + 1; i < wss.size(); i++) {
-    if (wss[i].focusable) {
-      return i;
-    }
-  }
-  // Before.
-  for (int i = 0; i < currently_focused; i++) {
-    if (wss[i].focusable) {
-      return i;
-    }
-  }
-  // No other focusable WindowedScreen was found.
-  return currently_focused;
+                           int focused_index) {
+  // Cycle through focusable windows. Increment focused_index (mod N) until it
+  // points to a focusable window.
+  while (!wss[(++focused_index) % wss.size()].focusable)
+    ;
+  return focused_index % wss.size();
 }
 
 }  // namespace
@@ -62,7 +53,9 @@ void Window::HandleInputEvent(InputEvent event) {
 }
 
 void Window::Render(Display* display) const {
-  for (const WindowedScreen& ws : windowed_screens_) {
+  // for (const WindowedScreen& ws : windowed_screens_) {
+  for (int i = 0; i < windowed_screens_.size(); i++) {
+    const WindowedScreen& ws = windowed_screens_[i];
     const Rect& w = ws.window;
     Rect padded_window = {
         Point{w.point.y + kPadding, w.point.x + kPadding},
@@ -71,6 +64,13 @@ void Window::Render(Display* display) const {
     display->PushWindow(padded_window);
     ws.screen->Render(display);
     display->PopWindow();
+
+    // If focused, draw a little square on the top right.
+    if (i == focused_index_) {
+      Rect focus_mark_rect{w.point + Point{0, w.size.width - kFocusMarkWidth},
+                           Size{kFocusMarkWidth, kFocusMarkWidth}};
+      display->FillRect(focus_mark_rect, Color::kBlack);
+    }
 
     // Draw the border after the content has been drawn.
     display->DrawRect(w, Color::kBlack);

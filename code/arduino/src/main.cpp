@@ -41,6 +41,7 @@ using deskmate::credentials::kMQTTPassword;
 using deskmate::credentials::kMQTTPort;
 using deskmate::credentials::kMQTTServer;
 using deskmate::credentials::kMQTTUser;
+using deskmate::credentials::kMQTTWeatherConfigs;
 
 // Input pins.
 using deskmate::credentials::kButtonAPin;
@@ -69,7 +70,7 @@ void setup() {
   }
 
   App app(&display, &mqtt_manager);
-  app.Init(kMQTTConfigs, kMQTTFloatingPointSensors);
+  app.Init(kMQTTConfigs, kMQTTFloatingPointSensors, kMQTTWeatherConfigs);
 
   SetupButtonsInterruptHandler(kCrankPushPin, kButtonAPin, kButtonBPin,
                                kButtonCPin, app.GetInputEventHandler());

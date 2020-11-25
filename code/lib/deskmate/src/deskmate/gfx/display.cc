@@ -19,6 +19,11 @@ Point operator+(Point lhs, const Point& rhs) {
   return lhs;
 }
 
+Point operator-(Point lhs, const Point& rhs) {
+  lhs -= rhs;
+  return lhs;
+}
+
 Display::Display(unsigned int height, unsigned int width) {
   windows_stack_.push(Rect{Point{0, 0}, Size{height, width}});
 }

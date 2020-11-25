@@ -15,6 +15,9 @@ namespace {
 using deskmate::app::MQTTConfig;
 }  // namespace
 
+// Units.
+constexpr char kUnitDegreeCelcius[] = "°C";
+
 // MQTT.
 constexpr char kMQTTUser[] = "mqttuser";
 constexpr char kMQTTPassword[] = "mqttpassword";
@@ -45,6 +48,15 @@ const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
          "home/Monstera/availability"},
         {"Ficus", "home/Ficus/soil_moisture_percent/retained",
          "home/Ficus/availability"},
+    };
+
+// MQTT-powered weather configs.
+const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
+    kMQTTWeatherConfigs{
+        {"Zurich", "home/Zurich/temp/retained",
+         "home/Zurich/availability", kUnitDegreeCelcius},
+        {"Office", "home/AirSensor/air_temperature/retained",
+         "home/AirSensor/availability", kUnitDegreeCelcius},
     };
 
 }  // namespace credentials

@@ -20,7 +20,15 @@ struct Point {
     x += rhs.x;
     return *this;
   }
+  Point& operator-=(const Point& rhs) {
+    y -= rhs.y;
+    x -= rhs.x;
+    return *this;
+  }
 };
+
+Point operator+(Point lhs, const Point& rhs);
+Point operator-(Point lhs, const Point& rhs);
 
 struct Size {
   unsigned int height;

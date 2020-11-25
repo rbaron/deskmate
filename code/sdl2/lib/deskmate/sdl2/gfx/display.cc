@@ -98,8 +98,10 @@ void SDLDisplay::PutTextAbsolute(int y, int x, const std::string& text,
   //     TTF_RenderText_Shaded(font_.get(), text.c_str(), text_color,
   //     back_color));
   // High quality, very slow.
+  // auto text_surface = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>(
+  //     TTF_RenderText_Blended(font_.get(), text.c_str(), text_color));
   auto text_surface = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>(
-      TTF_RenderText_Blended(font_.get(), text.c_str(), text_color));
+      TTF_RenderUTF8_Blended(font_.get(), text.c_str(), text_color));
   auto text_texture = std::unique_ptr<SDL_Texture, SDLTextureDeleter>(
       SDL_CreateTextureFromSurface(renderer_.get(), text_surface.get()));
 

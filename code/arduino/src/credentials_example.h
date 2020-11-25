@@ -14,6 +14,10 @@ namespace {
 using deskmate::app::MQTTConfig;
 }  // namespace
 
+// Units.
+// Our Arduino drawing library uses the CP437 character set.
+constexpr char kUnitDegreeCelcius[] = "\xf8" "C";
+
 // WiFi.
 constexpr char kWIFISSID[] = "wifi-ssid";
 constexpr char kWIFIPassword[] = "wifi-password";
@@ -58,6 +62,24 @@ const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
          "home/Monstera/availability"},
         {"Ficus", "home/Ficus/soil_moisture_percent/retained",
          "home/Ficus/availability"},
+    };
+
+// MQTT-powered weather configs.
+const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
+    kMQTTWeatherConfigs{
+        {"Zurich", "home/Zurich/temp/retained",
+         "home/Zurich/availability"},
+        {"Office", "home/AirSensor/air_temperature/retained",
+         "home/AirSensor/availability"},
+    };
+
+// MQTT-powered weather configs.
+const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
+    kMQTTWeatherConfigs{
+        {"Zurich", "home/Zurich/temp/retained",
+         "home/Zurich/availability", kUnitDegreeCelcius},
+        {"Office", "home/AirSensor/air_temperature/retained",
+         "home/AirSensor/availability", kUnitDegreeCelcius},
     };
 
 }  // namespace credentials

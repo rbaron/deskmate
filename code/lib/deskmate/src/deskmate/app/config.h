@@ -22,6 +22,7 @@ struct MQTTFloatingPointSensorConfig {
   std::string display_name;
   std::string value_topic;
   std::string availability_topic;
+  std::string unit;
 };
 
 }  // namespace app

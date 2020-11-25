@@ -7,14 +7,17 @@ project(deskmate)
 include_directories(src)
 
 set(SRC
+  src/deskmate/app/app.cc
   src/deskmate/gfx/display.cc
+  src/deskmate/gfx/components/circle_horizontal_list_item.cc
+  src/deskmate/gfx/components/mqtt_circle_horizontal_list_item.cc
+  src/deskmate/gfx/components/mqtt_list_item.cc
+  src/deskmate/gfx/components/mqtt_vertical_bar_list_item.cc
+  src/deskmate/gfx/screens/horizontal_list.cc
   src/deskmate/gfx/screens/list.cc
   src/deskmate/gfx/screens/vertical_bars_list.cc
   src/deskmate/gfx/screens/window.cc
-  src/deskmate/gfx/components/mqtt_list_item.cc
-  src/deskmate/gfx/components/mqtt_vertical_bar_list_item.cc
   src/deskmate/mqtt/mqtt.cc
-  src/deskmate/app/app.cc
 )
 
 add_library(deskmate ${SRC})

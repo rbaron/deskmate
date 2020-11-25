@@ -22,6 +22,7 @@ using deskmate::credentials::kFontPath;
 using deskmate::credentials::kMQTTClientId;
 using deskmate::credentials::kMQTTConfigs;
 using deskmate::credentials::kMQTTFloatingPointSensors;
+using deskmate::credentials::kMQTTWeatherConfigs;
 using deskmate::credentials::kMQTTPassword;
 using deskmate::credentials::kMQTTPort;
 using deskmate::credentials::kMQTTServer;
@@ -56,7 +57,7 @@ int main(int argc, char *argv[]) {
   SDLDisplay display(kDisplayHeight, kDisplayWidth, kFontPath);
 
   App app(&display, &mqtt_manager);
-  app.Init(kMQTTConfigs, kMQTTFloatingPointSensors);
+  app.Init(kMQTTConfigs, kMQTTFloatingPointSensors, kMQTTWeatherConfigs);
 
   InputTranscriber input_transcriber(app.GetInputEventHandler());
 

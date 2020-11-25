@@ -36,28 +36,25 @@ set(SRC
 
 link_directories(${CMAKE_SOURCE_DIR}/third-party/paho.mqtt.c/build/src)
 
-add_executable(deskmate-sdl2 src/main.cc ${SRC})
+set(LIBS
+  deskmate
+  ${SDL2_LIBRARIES}
+  ${SDL2_TTF_LIBRARIES}
+  ${SDL2_GFX_LIBRARIES}
+  libpaho-mqtt3cs.dylib
+)
 
 # Do we need to specify the extension .dylib here? Is there a better, cross-platform way
 # of doing this?
-target_link_libraries(deskmate-sdl2 deskmate
-  ${SDL2_LIBRARIES}
-  ${SDL2_TTF_LIBRARIES}
-  ${SDL2_GFX_LIBRARIES}
-  libpaho-mqtt3cs.dylib)
-
+add_executable(deskmate-sdl2 src/main.cc ${SRC})
+target_link_libraries(deskmate-sdl2 ${LIBS})
 
 # Samples
 add_executable(vertical-bars-list src/samples/vertical_bars_list.cc ${SRC})
-target_link_libraries(vertical-bars-list deskmate
-  ${SDL2_LIBRARIES}
-  ${SDL2_TTF_LIBRARIES}
-  ${SDL2_GFX_LIBRARIES}
-  libpaho-mqtt3cs.dylib)
+target_link_libraries(vertical-bars-list ${LIBS})
+
+add_executable(horizontal-list src/samples/horizontal_list.cc ${SRC})
+target_link_libraries(horizontal-list ${LIBS})
 
 add_executable(simple-list src/samples/simple_list.cc ${SRC})
-target_link_libraries(simple-list deskmate
-  ${SDL2_LIBRARIES}
-  ${SDL2_TTF_LIBRARIES}
-  ${SDL2_GFX_LIBRARIES}
-  libpaho-mqtt3cs.dylib)
+target_link_libraries(simple-list ${LIBS})
