@@ -1,8 +1,9 @@
 # Building
 
 Dependencies:
-* [SDL2](https://www.libsdl.org/)[SDL2] libraries. On macos, `brew install sdl2 sdl2_ttf sdl2_gfx`
+* [SDL2](https://www.libsdl.org/) libraries. On macos, `brew install sdl2 sdl2_ttf sdl2_gfx`
 * [Eclipse Paho C Library](https://www.eclipse.org/paho/). See below how to build it.
+* CMake
 
 ## Step 1. Build paho.mqtt.c
 ```
@@ -15,7 +16,7 @@ $ ninja
 ```
 
 ## Step 2. Configure it
-Copy `credentials_template.h` into `credentials.h` and edit it. It contains MQTT credentials and sensors/switches specifications.
+Copy `src/credentials_template.h` into `src/credentials.h` and edit it. It contains MQTT credentials and sensors/switches specifications.
 
 ## Step 3. Build `deskmate-sdl2`
 
@@ -26,7 +27,7 @@ $ cmake ..
 $ make
 ```
 
-## Step 3. Run it!
+## Step 4. Run it!
 ```
 $ ./deskmate-sdl2
 ```

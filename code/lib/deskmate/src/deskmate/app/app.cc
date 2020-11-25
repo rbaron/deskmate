@@ -37,10 +37,22 @@ using deskmate::mqtt::MQTTMessage;
 using deskmate::mqtt::MQTTMessageBuffer;
 using deskmate::mqtt::MQTTSubscriber;
 
+std::unique_ptr<ListScreen> MakeSwitchesControls(
+    const std::vector<MQTTConfig> &mqtt_configs,
+    MQTTMessageBuffer *mqtt_buffer) {
+  std::vector<std::unique_ptr<ListItem>> left_list_items;
+  for (const auto &cfg : mqtt_configs) {
+    std::unique_ptr<MQTTListItem> list_item = std::make_unique<MQTTListItem>(
+        cfg.display_name, cfg.command_topic, cfg.state_topic, mqtt_buffer);
+    mqtt_buffer->Subscribe(list_item.get());
+    left_list_items.push_back(std::move(list_item));
+  }
+  return std::make_unique<ListScreen>(left_list_items);
+}
+
 std::unique_ptr<VerticalBarsList> MakePlantsDashboard(
     const std::vector<MQTTFloatingPointSensorConfig> &sensor_configs,
-    MQTTMessageBuffer *mqtt_buffer,
-    std::vector<MQTTSubscriber *> *mqtt_subscribers) {
+    MQTTMessageBuffer *mqtt_buffer) {
   std::vector<std::unique_ptr<VerticalBarListItem>> items;
   for (const auto &config : sensor_configs) {
     auto item = std::make_unique<MQTTVerticalBarListItem>(
@@ -53,8 +65,7 @@ std::unique_ptr<VerticalBarsList> MakePlantsDashboard(
 
 std::unique_ptr<HorizontalList> MakeWeatherDashboard(
     const std::vector<MQTTFloatingPointSensorConfig> &weather_configs,
-    MQTTMessageBuffer *mqtt_buffer,
-    std::vector<MQTTSubscriber *> *mqtt_subscribers) {
+    MQTTMessageBuffer *mqtt_buffer) {
   std::vector<std::unique_ptr<HorizontalListItem>> items;
   for (const auto &config : weather_configs) {
     auto item = std::make_unique<MQTTCircleHorizontalListItem>(
@@ -72,24 +83,13 @@ bool App::Init(
     const std::vector<MQTTConfig> &mqtt_configs,
     const std::vector<MQTTFloatingPointSensorConfig> sensor_configs,
     const std::vector<MQTTFloatingPointSensorConfig> weather_configs) {
-  // Left split.
-  std::vector<std::unique_ptr<ListItem>> left_list_items;
-  for (const auto &cfg : mqtt_configs) {
-    std::unique_ptr<MQTTListItem> list_item = std::make_unique<MQTTListItem>(
-        cfg.display_name, cfg.command_topic, cfg.state_topic, mqtt_buffer_);
-    mqtt_buffer_->Subscribe(list_item.get());
-    left_list_items.push_back(std::move(list_item));
-  }
-  std::unique_ptr<ListScreen> left_split =
-      std::make_unique<ListScreen>(left_list_items);
-
   std::unique_ptr<VerticalBarsList> plants_dashboard =
-      MakePlantsDashboard(sensor_configs, mqtt_buffer_, &mqtt_subscribers_);
+      MakePlantsDashboard(sensor_configs, mqtt_buffer_);
 
   const Size &size = display_->GetSize();
 
   std::vector<WindowedScreen> windowed_screens;
-  windowed_screens.push_back({std::move(left_split),
+  windowed_screens.push_back({MakeSwitchesControls(mqtt_configs, mqtt_buffer_),
                               {{0, 0}, {size.height, size.width / 2}},
                               /*focusable=*/true});
   windowed_screens.push_back(
@@ -97,7 +97,7 @@ bool App::Init(
        {{0, size.width / 2}, {size.height / 2, size.width / 2}},
        /*focusable=*/true});
   windowed_screens.push_back(
-      {MakeWeatherDashboard(weather_configs, mqtt_buffer_, &mqtt_subscribers_),
+      {MakeWeatherDashboard(weather_configs, mqtt_buffer_),
        {{size.height / 2, size.width / 2}, {size.height / 2, size.width / 2}},
        /*focusable=*/true});
 
@@ -107,14 +107,6 @@ bool App::Init(
 
 bool App::Tick() {
   mqtt_buffer_->Process();
-  // auto *mqtt_in_queue = mqtt_buffer_->InputQueue();
-  // while (!mqtt_in_queue->empty()) {
-  //   const MQTTMessage &msg = mqtt_in_queue->front();
-  //   for (auto mqtt_subscriber : mqtt_subscribers_) {
-  //     mqtt_subscriber->HandleMessage(msg);
-  //   }
-  //   mqtt_in_queue->pop();
-  // }
   display_->Clear();
   window_->Render(display_);
   display_->Refresh();

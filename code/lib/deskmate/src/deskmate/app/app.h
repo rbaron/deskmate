@@ -6,10 +6,7 @@
 #include <vector>
 
 #include "deskmate/app/config.h"
-// #include "deskmate/gfx/components/mqtt_list_item.h"
-// #include "deskmate/gfx/components/text_list_item.h"
 #include "deskmate/gfx/display.h"
-// #include "deskmate/gfx/screens/list.h"
 #include "deskmate/gfx/screens/window.h"
 #include "deskmate/input/input.h"
 #include "deskmate/mqtt/mqtt.h"
@@ -47,7 +44,6 @@ class App {
   Display *display_;
   deskmate::mqtt::MQTTMessageBuffer *mqtt_buffer_;
   std::unique_ptr<deskmate::gfx::screens::Window> window_;
-  std::vector<deskmate::mqtt::MQTTSubscriber *> mqtt_subscribers_;
 };
 
 }  // namespace app
