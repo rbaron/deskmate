@@ -81,8 +81,8 @@ std::unique_ptr<HorizontalList> MakeWeatherDashboard(
 
 bool App::Init(
     const std::vector<MQTTConfig> &mqtt_configs,
-    const std::vector<MQTTFloatingPointSensorConfig> sensor_configs,
-    const std::vector<MQTTFloatingPointSensorConfig> weather_configs) {
+    const std::vector<MQTTFloatingPointSensorConfig>& sensor_configs,
+    const std::vector<MQTTFloatingPointSensorConfig>& weather_configs) {
   std::unique_ptr<VerticalBarsList> plants_dashboard =
       MakePlantsDashboard(sensor_configs, mqtt_buffer_);
 
