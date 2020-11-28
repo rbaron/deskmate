@@ -20,48 +20,16 @@ class MQTTSubscriber {
   virtual const std::vector<std::string> SubscriptionTopics() const = 0;
 };
 
-using MQTTMessageQueue = std::queue<MQTTMessage>;
-
 // Interface for providing queues for inbound and outbound messages.
 class MQTTMessageBuffer {
  public:
   virtual bool Connect() = 0;
   virtual bool IsConnected() const = 0;
-
-  // Derived classes can override this to implement locking/synchronization,
-  // if they run in multiple thread.
-  virtual bool Process() { return ProcessInner(); };
-
-  // Subscribes to a topic and remembers it so it automatically reconnects
-  // when the connection is restablished.
-  bool Subscribe(MQTTSubscriber* subscriber);
-
-  virtual bool EnqueueForSending(const MQTTMessage& msg) = 0;
-
- protected:
-  // Sends the received message to registered callbacks. If the derived class
-  // do multi-threaded stuff, it is up to them to synchronize this call in
-  // relatinship to the Process function.
-  bool Dispatch(const MQTTMessage& msg);
-
-  // ProcessInner does the following:
-  // 1. Ensures the client is connected (may reconnect and resubscribe if not)
-  // 2. Publishes all outgoing messages from the output queue.
-  bool ProcessInner();
-
-  MQTTMessageQueue out_queue_;
-
- private:
-  // Simply handles a subscription. Do not care about re-subscribing.
-  virtual bool SubscribeOnly(const std::string& topic) = 0;
-
-  // Not to be called directly. Will be called by Process.
+  virtual bool Subscribe(MQTTSubscriber* subscriber) = 0;
   virtual bool Publish(const MQTTMessage& msg) = 0;
 
-  // Stores subscriptions so we can re-subscribe upon reconnection if the
-  // connection drop.
-  std::unordered_map<std::string, std::vector<MQTTSubscriber*>>
-      subscribers_by_topic_;
+  // This will be called once every main app tick.
+  virtual bool Tick() { return true; };
 };
 
 }  // namespace mqtt

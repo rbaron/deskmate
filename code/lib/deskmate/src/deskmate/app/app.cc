@@ -106,7 +106,7 @@ bool App::Init(
 }
 
 bool App::Tick() {
-  mqtt_buffer_->Process();
+  mqtt_buffer_->Tick();
   display_->Clear();
   window_->Render(display_);
   display_->Refresh();

@@ -53,7 +53,8 @@ void MQTTListItem::Render(Display* display, bool is_selected) const {
 }
 
 void MQTTListItem::OnSelect() {
-  mqtt_buffer_->EnqueueForSending({command_topic_, on_ ? "OFF" : "ON"});
+  // mqtt_buffer_->EnqueueForSending({command_topic_, on_ ? "OFF" : "ON"});
+  mqtt_buffer_->Publish({command_topic_, on_ ? "OFF" : "ON"});
 }
 
 const std::vector<std::string> MQTTListItem::SubscriptionTopics() const {
