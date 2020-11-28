@@ -35,17 +35,19 @@ class PahoMQTTManager : public deskmate::mqtt::MQTTMessageBuffer {
   std::unique_ptr<MQTTClient, PahoMQTTClientDeleter> mqtt_client_;
   MQTTClient_connectOptions conn_opts_;
 
-  // Mutex for syncrhonizing read/write access to subscribers_by_topic_. On the
-  // main thread, we handle subscriptions, which will write to
-  // subscribers_by_topic_. On different thread(s), the paho library will access
-  // subscribers_by_topic_ via our registered callback OnMessageReceived, at
-  // which point it will read which subscribers to forward each message.
-  std::shared_mutex mutex_;
+  // Mutex for synchronizing read/write access to in_queue_. On the
+  // main thread, we dispatch incoming messages in this queue to their
+  // respective MQTTSubscribers. On a different thread, the paho library will
+  // populate this queue via our registered callback OnMessageReceived.
+  std::shared_mutex input_queue_mutex_;
 
   // Holds pointers to subscribers so it can re-subscribe when the connection
   // drops. Pointers are expected to outlive instances of this class.
   std::unordered_map<std::string, std::vector<deskmate::mqtt::MQTTSubscriber*>>
       subscribers_by_topic_;
+
+  // Holds incomming messages to be dispatched to subscribers in the main loop.
+  std::queue<deskmate::mqtt::MQTTMessage> in_queue_;
 
   // Static callback. void* context will point to an instance of this class.
   static int OnMessageReceived(void* context, char* topicName, int topicLen,

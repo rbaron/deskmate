@@ -41,6 +41,8 @@ class MQTTManager : public deskmate::mqtt::MQTTMessageBuffer {
   std::unordered_map<std::string, std::vector<deskmate::mqtt::MQTTSubscriber*>>
       subscribers_by_topic_;
 
+  // Holds messages to be published in the main loop. These messages were likely
+  // put here from interrupt service routines (for example when a button is pushed).
   std::queue<deskmate::mqtt::MQTTMessage> out_queue_;
 };
 

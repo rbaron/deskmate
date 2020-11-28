@@ -87,13 +87,7 @@ bool PahoMQTTManager::IsConnected() const {
 
 bool PahoMQTTManager::Subscribe(MQTTSubscriber* subscriber) {
   for (const std::string& topic : subscriber->SubscriptionTopics()) {
-    // We register the callback handler first, since some topics might have
-    // retained messages that will be received during the call the
-    // MQTTClient_subscribe below.
-    {
-      std::unique_lock guard(mutex_);
-      subscribers_by_topic_[topic].push_back(subscriber);
-    }
+    subscribers_by_topic_[topic].push_back(subscriber);
 
     if (MQTTClient_subscribe(*mqtt_client_, topic.c_str(), kSubscribeQoS) !=
         MQTTCLIENT_SUCCESS) {
@@ -120,24 +114,29 @@ bool PahoMQTTManager::Tick() {
     }
 
     // Re-subscribe to previously subscribed topics.
-    {
-      // It's important that this is a shared_lock, since the OnMessageReceived
-      // callback might be called inside the call to MQTTClient_subscribe. It
-      // that call _also_ tried to acquire an exclusive lock, we'd have a
-      // textbook deadlock in our hands.
-      std::cerr << "[mqtt] Will get the shared lock for reconnecting.\n";
-      std::shared_lock guard(mutex_);
-      std::cerr << "[mqtt] Got the shared lock for reconnecting.\n";
-      std::for_each(
-          subscribers_by_topic_.cbegin(), subscribers_by_topic_.cend(),
-          [this](const std::pair<std::string, std::vector<MQTTSubscriber*>>&
-                     pair) {
-            MQTTClient_subscribe(*mqtt_client_, pair.first.c_str(),
-                                 kSubscribeQoS);
-          });
-      std::cerr << "[mqtt] Done resubscribing.\n";
+    std::cerr << "[mqtt] Will resubscribe to topics.\n";
+    std::for_each(
+        subscribers_by_topic_.cbegin(), subscribers_by_topic_.cend(),
+        [this](
+            const std::pair<std::string, std::vector<MQTTSubscriber*>>& pair) {
+          MQTTClient_subscribe(*mqtt_client_, pair.first.c_str(),
+                               kSubscribeQoS);
+        });
+    std::cerr << "[mqtt] Done resubscribing.\n";
+  }
+
+  // Forwards the received messages to registered subscribers.
+  {
+    std::shared_lock lock(input_queue_mutex_);
+    while (!in_queue_.empty()) {
+      const MQTTMessage& msg = in_queue_.front();
+      for (MQTTSubscriber* subs : subscribers_by_topic_[msg.topic]) {
+        subs->HandleMessage(msg);
+      }
+      in_queue_.pop();
     }
   }
+
   return true;
 }
 
@@ -150,21 +149,8 @@ int PahoMQTTManager::OnMessageReceived(void* context, char* topic,
     const MQTTMessage msg{
         std::string(topic, topic_len > 0 ? topic_len : std::strlen(topic)),
         std::string(static_cast<char*>(message->payload), message->payloadlen)};
-    {
-      // std::cerr << "[msg] Got msg: " << msg.topic << " -> " << msg.payload
-      //           << " (" << std::this_thread::get_id() << ")\n";
-      std::shared_lock guard(instance->mutex_);
-
-      // TODO: there is another possible race condition here: each client might
-      // be accessing their internal state when we call their HandleMessage()
-      // here (this is called from a different thread than the main one). I
-      // think a cleaner approach is to buffer these received message on a queue
-      // and forwared them to subscribers during the Tick() call, since it's
-      // called by the main thread.
-      for (MQTTSubscriber* subs : instance->subscribers_by_topic_[topic]) {
-        subs->HandleMessage(msg);
-      }
-    }
+    std::unique_lock lock(instance->input_queue_mutex_);
+    instance->in_queue_.push(msg);
   }
   MQTTClient_free(topic);
   MQTTClient_freeMessage(&message);
