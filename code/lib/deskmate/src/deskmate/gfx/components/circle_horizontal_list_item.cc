@@ -44,18 +44,9 @@ void CircleHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
   // Draw text in the middle.
   const std::string text =
       is_available_
-          ? std::to_string(static_cast<int>(std::ceil(value_))) + unit_
+          ? std::to_string(static_cast<int>(std::round(value_))) + unit_
           : "N/A";
-  // ? std::to_string(static_cast<int>(std::ceil(value_))) +
-  //       // (char)248 + "C" // This works with Arduino -
-  //       // https://en.wikipedia.org/wiki/Code_page_437
-  //       "\xf8" + "C"  // This works with Arduino -
-  //                     // https://en.wikipedia.org/wiki/Code_page_437
-  // // (char)176 + "C" // This is supposed to be the Unicode
-  // // code point of C
-  // // "\xC2\xB0" + "C"  // This works for SDL (utf-8
-  // // representation of of the 0xb0 codepoint) "°C"
-  // : "N/A";
+
   const Point text_point = {center.y - char_scale * char_size.height / 2,
                             center.x - char_scale * char_size.width *
                                            static_cast<int>(text.length()) / 2};

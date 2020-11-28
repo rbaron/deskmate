@@ -19,8 +19,9 @@ using deskmate::mqtt::MQTTMessageQueue;
 
 constexpr bool kCleanSession = true;
 constexpr int kKeepAliveIntervalSecs = 20;
-// Quality of service 0 just so we match the Arduino implementation.
-constexpr int kQoS = 0;
+// Match the Arduino QoS, although Paho supports higher QoS.
+constexpr int kSubscribeQoS = 1;
+constexpr int kPublishQoS = 0;
 
 void OnConnLost(void* context, char* cause) {
   std::cerr << "MQTT connection lost!\n";
@@ -76,7 +77,7 @@ bool PahoMQTTManager::IsConnected() const {
 }
 
 bool PahoMQTTManager::SubscribeOnly(const std::string& topic) {
-  int ret = MQTTClient_subscribe(*mqtt_client_, topic.c_str(), kQoS);
+  int ret = MQTTClient_subscribe(*mqtt_client_, topic.c_str(), kSubscribeQoS);
   if (ret != MQTTCLIENT_SUCCESS) {
     return false;
   }
@@ -85,7 +86,7 @@ bool PahoMQTTManager::SubscribeOnly(const std::string& topic) {
 
 bool PahoMQTTManager::Publish(const MQTTMessage& msg) {
   return MQTTClient_publish(*mqtt_client_, msg.topic.c_str(),
-                            msg.payload.length(), msg.payload.c_str(), kQoS,
+                            msg.payload.length(), msg.payload.c_str(), kPublishQoS,
                             /*retained=*/false,
                             /*dt=*/nullptr) == MQTTCLIENT_SUCCESS;
 }

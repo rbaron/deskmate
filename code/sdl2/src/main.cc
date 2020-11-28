@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 
+#include "SDL.h"
 #include "credentials.h"
 #include "deskmate/app/app.h"
 #include "deskmate/sdl2/gfx/display.h"
@@ -22,11 +23,11 @@ using deskmate::credentials::kFontPath;
 using deskmate::credentials::kMQTTClientId;
 using deskmate::credentials::kMQTTConfigs;
 using deskmate::credentials::kMQTTFloatingPointSensors;
-using deskmate::credentials::kMQTTWeatherConfigs;
 using deskmate::credentials::kMQTTPassword;
 using deskmate::credentials::kMQTTPort;
 using deskmate::credentials::kMQTTServer;
 using deskmate::credentials::kMQTTUser;
+using deskmate::credentials::kMQTTWeatherConfigs;
 
 class SDLIniter {
  public:
@@ -64,5 +65,6 @@ int main(int argc, char *argv[]) {
   while (!input_transcriber.ShouldQuit()) {
     input_transcriber.DispatchEvents();
     app.Tick();
+    SDL_Delay(10);
   }
 }

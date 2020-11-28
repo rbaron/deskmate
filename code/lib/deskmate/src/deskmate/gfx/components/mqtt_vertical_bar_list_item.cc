@@ -35,8 +35,6 @@ const std::string& MQTTVerticalBarListItem::DisplayName() const {
 
 void MQTTVerticalBarListItem::HandleMessage(
     const deskmate::mqtt::MQTTMessage& msg) {
-  std::cout << "Got mqtt msg: " << msg.topic << " -> " << msg.payload
-            << std::endl;
   if (msg.topic == availability_topic_) {
     is_available_ = msg.payload == "online";
   } else if(msg.topic == value_topic_) {

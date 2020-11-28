@@ -11,6 +11,9 @@ namespace net {
 
 namespace {
 using deskmate::mqtt::MQTTMessage;
+
+// Max that PubSubClient supports.
+constexpr int kSubscriptionQoS = 1;
 }  // namespace
 
 MQTTManager::MQTTManager(const char* server, int port, const char* username,
@@ -52,8 +55,10 @@ bool MQTTManager::EnqueueForSending(const MQTTMessage& msg) {
 }
 
 bool MQTTManager::SubscribeOnly(const std::string& topic) {
-  return pubsub_client_->subscribe(topic.c_str());
+  return pubsub_client_->subscribe(topic.c_str(), kSubscriptionQoS);
 }
+
+// PubSubClient::publish only supports QoS = 0.
 bool MQTTManager::Publish(const MQTTMessage& msg) {
   return pubsub_client_->publish(msg.topic.c_str(), msg.payload.c_str());
 }

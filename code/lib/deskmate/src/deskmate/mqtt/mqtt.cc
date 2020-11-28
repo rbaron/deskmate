@@ -1,7 +1,6 @@
 #include "deskmate/mqtt/mqtt.h"
 
 #include <algorithm>
-#include <iostream>
 #include <queue>
 #include <string>
 
