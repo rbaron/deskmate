@@ -25,9 +25,12 @@ class HorizontalListItem {
 // A horizontal list that renders scrollable HorizontalListItems.
 class HorizontalList : public Screen {
  public:
-  explicit HorizontalList(
-      std::vector<std::unique_ptr<HorizontalListItem>>& items)
-      : items_(std::move(items)), selected_(0), top_index_(0) {}
+  HorizontalList(std::vector<std::unique_ptr<HorizontalListItem>>& items,
+                 unsigned int item_width)
+      : items_(std::move(items)),
+        selected_(0),
+        top_index_(0),
+        item_width_(item_width) {}
   ~HorizontalList() override;
   void HandleInputEvent(deskmate::input::InputEvent event) override;
   void Render(Display* display) const override;
@@ -36,8 +39,13 @@ class HorizontalList : public Screen {
   std::vector<std::unique_ptr<HorizontalListItem>> items_;
   std::size_t selected_;
 
-  // These are internal states which can be updated from a const reference.
+  // This is a value that controls the scrolling position. It might be modified
+  // from const references, since it's just an internal state used for
+  // rendering.
   mutable std::size_t top_index_;
+
+  unsigned int item_width_;
+
   mutable deskmate::input::InputEvent last_scroll_ =
       deskmate::input::InputEvent::kUnknown;
 };

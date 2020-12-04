@@ -20,7 +20,6 @@ using deskmate::gfx::constants::kPadding;
 // Radius for the little circle that is drawn under the currently selected item.
 constexpr unsigned int kSelectorHeight = 16;
 constexpr unsigned int kSelectorRadius = 6;
-constexpr unsigned int kBarWidth = 2 * kPadding;
 constexpr unsigned int kBaselineHeight = 1;
 constexpr unsigned int kLegendFontScale = 2;
 }  // namespace
@@ -55,9 +54,10 @@ void VerticalBarHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
 
   // Bar itself.
   const unsigned int bar_height = percentage_ * bar_container.size.height;
+  const unsigned int bar_width = bar_container.size.width / 2;
   Rect bar{Point{bar_container.size.height - bar_height,
-                 (bar_container.size.width - kBarWidth) / 2},
-           Size{bar_height, kBarWidth}};
+                 (bar_container.size.width - bar_width) / 2},
+           Size{bar_height, bar_width}};
   if (is_available_) {
     display->FillRect(bar, Color::kBlack);
   } else {

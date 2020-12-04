@@ -23,21 +23,21 @@ using deskmate::gfx::Display;
 using deskmate::gfx::Size;
 using deskmate::gfx::components::MQTTCircleHorizontalListItem;
 using deskmate::gfx::components::MQTTListItem;
-// using deskmate::gfx::components::MQTTVerticalBarListItem;
 using deskmate::gfx::components::MQTTVerticalBarHorizontalListItem;
 using deskmate::gfx::components::TextListItem;
 using deskmate::gfx::screens::HorizontalList;
 using deskmate::gfx::screens::HorizontalListItem;
 using deskmate::gfx::screens::ListItem;
 using deskmate::gfx::screens::ListScreen;
-// using deskmate::gfx::screens::VerticalBarListItem;
-// using deskmate::gfx::screens::VerticalBarsList;
 using deskmate::gfx::screens::Window;
 using deskmate::gfx::screens::WindowedScreen;
 using deskmate::input::InputEventHandler;
 using deskmate::mqtt::MQTTMessage;
 using deskmate::mqtt::MQTTMessageBuffer;
 using deskmate::mqtt::MQTTSubscriber;
+
+constexpr unsigned int kVerticalBarContainerWidth = 32;
+constexpr unsigned int kCircleContainerWidth = 84;
 
 std::unique_ptr<ListScreen> MakeSwitchesControls(
     const std::vector<MQTTConfig> &mqtt_configs,
@@ -62,7 +62,7 @@ std::unique_ptr<HorizontalList> MakePlantsDashboard(
     mqtt_buffer->Subscribe(item.get());
     items.push_back(std::move(item));
   }
-  return std::make_unique<HorizontalList>(items);
+  return std::make_unique<HorizontalList>(items, kVerticalBarContainerWidth);
 }
 
 std::unique_ptr<HorizontalList> MakeWeatherDashboard(
@@ -76,7 +76,7 @@ std::unique_ptr<HorizontalList> MakeWeatherDashboard(
     mqtt_buffer->Subscribe(item.get());
     items.push_back(std::move(item));
   }
-  return std::make_unique<HorizontalList>(items);
+  return std::make_unique<HorizontalList>(items, kCircleContainerWidth);
 }
 
 }  // namespace

@@ -28,6 +28,8 @@ using deskmate::credentials::kDisplayHeight;
 using deskmate::credentials::kDisplayWidth;
 using deskmate::credentials::kFontPath;
 
+constexpr unsigned int kItemWidth = 90;
+
 class SDLIniter {
  public:
   SDLIniter() {
@@ -52,13 +54,12 @@ int main(int argc, char* argv[]) {
   std::vector<std::unique_ptr<HorizontalListItem>> items;
   for (int i = 0; i < 15; i++) {
     items.push_back(std::make_unique<CircleHorizontalListItem>(
-        "Item #" + std::to_string(i),
-        "°C",
+        "Item #" + std::to_string(i), "°C",
         /*value=*/std::rand() % 100 - 50,
         /*is_available=*/rand() % 2 == 0));
   }
 
-  HorizontalList screen(items);
+  HorizontalList screen(items, kItemWidth);
 
   InputTranscriber input_transcriber(&screen);
 
