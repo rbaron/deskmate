@@ -3,12 +3,13 @@
 #include "deskmate/app/config.h"
 #include "deskmate/gfx/components/mqtt_circle_horizontal_list_item.h"
 #include "deskmate/gfx/components/mqtt_list_item.h"
-#include "deskmate/gfx/components/mqtt_vertical_bar_list_item.h"
+// #include "deskmate/gfx/components/mqtt_vertical_bar_list_item.h"
+#include "deskmate/gfx/components/mqtt_vertical_bar_horizontal_list_item.h"
 #include "deskmate/gfx/components/text_list_item.h"
 #include "deskmate/gfx/display.h"
 #include "deskmate/gfx/screens/horizontal_list.h"
 #include "deskmate/gfx/screens/list.h"
-#include "deskmate/gfx/screens/vertical_bars_list.h"
+// #include "deskmate/gfx/screens/vertical_bars_list.h"
 #include "deskmate/gfx/screens/window.h"
 #include "deskmate/input/input.h"
 #include "deskmate/mqtt/mqtt.h"
@@ -22,14 +23,15 @@ using deskmate::gfx::Display;
 using deskmate::gfx::Size;
 using deskmate::gfx::components::MQTTCircleHorizontalListItem;
 using deskmate::gfx::components::MQTTListItem;
-using deskmate::gfx::components::MQTTVerticalBarListItem;
+// using deskmate::gfx::components::MQTTVerticalBarListItem;
+using deskmate::gfx::components::MQTTVerticalBarHorizontalListItem;
 using deskmate::gfx::components::TextListItem;
 using deskmate::gfx::screens::HorizontalList;
 using deskmate::gfx::screens::HorizontalListItem;
 using deskmate::gfx::screens::ListItem;
 using deskmate::gfx::screens::ListScreen;
-using deskmate::gfx::screens::VerticalBarListItem;
-using deskmate::gfx::screens::VerticalBarsList;
+// using deskmate::gfx::screens::VerticalBarListItem;
+// using deskmate::gfx::screens::VerticalBarsList;
 using deskmate::gfx::screens::Window;
 using deskmate::gfx::screens::WindowedScreen;
 using deskmate::input::InputEventHandler;
@@ -50,17 +52,17 @@ std::unique_ptr<ListScreen> MakeSwitchesControls(
   return std::make_unique<ListScreen>(left_list_items);
 }
 
-std::unique_ptr<VerticalBarsList> MakePlantsDashboard(
+std::unique_ptr<HorizontalList> MakePlantsDashboard(
     const std::vector<MQTTFloatingPointSensorConfig> &sensor_configs,
     MQTTMessageBuffer *mqtt_buffer) {
-  std::vector<std::unique_ptr<VerticalBarListItem>> items;
+  std::vector<std::unique_ptr<HorizontalListItem>> items;
   for (const auto &config : sensor_configs) {
-    auto item = std::make_unique<MQTTVerticalBarListItem>(
+    auto item = std::make_unique<MQTTVerticalBarHorizontalListItem>(
         config.display_name, config.value_topic, config.availability_topic);
     mqtt_buffer->Subscribe(item.get());
     items.push_back(std::move(item));
   }
-  return std::make_unique<VerticalBarsList>(items);
+  return std::make_unique<HorizontalList>(items);
 }
 
 std::unique_ptr<HorizontalList> MakeWeatherDashboard(
@@ -81,11 +83,8 @@ std::unique_ptr<HorizontalList> MakeWeatherDashboard(
 
 bool App::Init(
     const std::vector<MQTTConfig> &mqtt_configs,
-    const std::vector<MQTTFloatingPointSensorConfig>& sensor_configs,
-    const std::vector<MQTTFloatingPointSensorConfig>& weather_configs) {
-  std::unique_ptr<VerticalBarsList> plants_dashboard =
-      MakePlantsDashboard(sensor_configs, mqtt_buffer_);
-
+    const std::vector<MQTTFloatingPointSensorConfig> &sensor_configs,
+    const std::vector<MQTTFloatingPointSensorConfig> &weather_configs) {
   const Size &size = display_->GetSize();
 
   std::vector<WindowedScreen> windowed_screens;
@@ -93,7 +92,7 @@ bool App::Init(
                               {{0, 0}, {size.height, size.width / 2}},
                               /*focusable=*/true});
   windowed_screens.push_back(
-      {std::move(plants_dashboard),
+      {MakePlantsDashboard(sensor_configs, mqtt_buffer_),
        {{0, size.width / 2}, {size.height / 2, size.width / 2}},
        /*focusable=*/true});
   windowed_screens.push_back(

@@ -12,10 +12,10 @@ set(SRC
   src/deskmate/gfx/components/circle_horizontal_list_item.cc
   src/deskmate/gfx/components/mqtt_circle_horizontal_list_item.cc
   src/deskmate/gfx/components/mqtt_list_item.cc
-  src/deskmate/gfx/components/mqtt_vertical_bar_list_item.cc
+  src/deskmate/gfx/components/mqtt_vertical_bar_horizontal_list_item.cc
+  src/deskmate/gfx/components/vertical_bar_horizontal_list_item.cc
   src/deskmate/gfx/screens/horizontal_list.cc
   src/deskmate/gfx/screens/list.cc
-  src/deskmate/gfx/screens/vertical_bars_list.cc
   src/deskmate/gfx/screens/window.cc
 )
 

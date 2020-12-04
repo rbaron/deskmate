@@ -40,6 +40,7 @@ class SDLIniter {
 
     // TODO: rendered stuff looks blurry.
     // SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
   }
   ~SDLIniter() { SDL_Quit(); }
 };
