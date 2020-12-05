@@ -19,9 +19,9 @@ using deskmate::gfx::constants::kPadding;
 using deskmate::input::InputEvent;
 
 constexpr unsigned int kLegendCharScale = 2;
-// constexpr unsigned int kItemWidth = 8 * kPadding;
 
 // Scrollbar.
+constexpr unsigned int kScrollbarVerticalPadding = kPadding;
 constexpr unsigned int kScrollbarHeight = 3;
 }  // namespace
 
@@ -61,8 +61,10 @@ void HorizontalList::Render(Display* display) const {
                          Size{legend_height, inner_size.width}};
 
   // Scrollbar area. Goes on top of the legend.
-  const Rect scrollbar_rect{legend_rect.point - Point{kScrollbarHeight, 0},
-                            Size{kScrollbarHeight, inner_size.width}};
+  const Rect scrollbar_rect{
+      legend_rect.point -
+          Point{kScrollbarHeight + 2 * kScrollbarVerticalPadding, 0},
+      Size{kScrollbarHeight + 2 * kScrollbarVerticalPadding, inner_size.width}};
 
   // Items area. It takes the remaining space, on top of the scrollbar.
   const Rect items_rect{Point{0, 0},
@@ -114,8 +116,9 @@ void HorizontalList::Render(Display* display) const {
     const unsigned int scrollbar_left_pixel =
         static_cast<double>(inner_size.width - scrollbar_width) /
         (items_.size() - n_items_to_show) * top_index_;
-    Rect scrollbar_bar_rect{Point{0, scrollbar_left_pixel},
-                            Size{kScrollbarHeight, scrollbar_width}};
+    Rect scrollbar_bar_rect{
+        Point{kScrollbarVerticalPadding, scrollbar_left_pixel},
+        Size{kScrollbarHeight, scrollbar_width}};
     display->FillRect(scrollbar_bar_rect, Color::kBlack);
     display->PopWindow();
   }
