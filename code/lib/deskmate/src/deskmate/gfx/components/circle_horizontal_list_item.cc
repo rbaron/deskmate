@@ -5,6 +5,7 @@
 #include "deskmate/gfx/constants.h"
 #include "deskmate/gfx/display.h"
 #include "deskmate/gfx/screens/horizontal_list.h"
+#include "deskmate/utils/utils.h"
 
 namespace deskmate {
 namespace gfx {
@@ -54,11 +55,22 @@ void CircleHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
 }
 
 void CircleHorizontalListItem::RenderLegend(Display* display) const {
-  const unsigned int char_scale = 2;
+  // const unsigned int char_scale = 2;
+  unsigned int char_scale = 2;
   const Size container = display->GetSize();
   const Size char_size = display->GetCharSize();
+
+  // Display name goes on the left.
   display->PutText((container.height - char_size.height * char_scale) / 2, 0,
-                   display_name_, 2, Color::kBlack);
+                   display_name_, char_scale, Color::kBlack);
+
+  // Value goes on the right.
+  // char_scale = 1;
+  std::string legend = deskmate::utils::to_fixed(value_, 1) + unit_;
+  const unsigned int legend_width =
+      char_scale * char_size.width * legend.length();
+  display->PutText((container.height - char_size.height * char_scale) / 2,
+                   container.width - legend_width, legend, char_scale, Color::kBlack);
 }
 
 }  // namespace components
