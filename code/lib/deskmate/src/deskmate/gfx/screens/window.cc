@@ -45,9 +45,7 @@ void Window::HandleInputEvent(InputEvent event) {
       break;
     // Forward all other inputs to the focused WindowedScreen (if any).
     default:
-      if (focused_index_ >= 0) {
-        windowed_screens_[focused_index_].screen->HandleInputEvent(event);
-      }
+      windowed_screens_[focused_index_].screen->HandleInputEvent(event);
       break;
   }
 }
