@@ -1,9 +1,9 @@
+name: Build
 on: [push, pull_request]
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Builds the deskmate library
+    name: Checks format & builds the deskmate library
     steps:
       - name: Checkout
         uses: actions/checkout@v2

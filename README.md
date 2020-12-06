@@ -1,5 +1,6 @@
-# deskmate
+![.github/workflows/deskmate.yml](https://github.com/rbaron/deskmate/workflows/.github/workflows/deskmate.yml/badge.svg)
 
+# deskmate
 A hackable & portable [MQTT](https://mqtt.org/)-powered mini dashboard and control center.
 
 <p align="center">
