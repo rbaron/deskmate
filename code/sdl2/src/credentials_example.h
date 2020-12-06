@@ -45,9 +45,9 @@ const std::vector<MQTTConfig> kMQTTConfigs{
 const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
     kMQTTFloatingPointSensors{
         {"Monstera", "home/Monstera/soil_moisture_percent/retained",
-         "home/Monstera/availability"},
+         "home/Monstera/availability", "%"},
         {"Ficus", "home/Ficus/soil_moisture_percent/retained",
-         "home/Ficus/availability"},
+         "home/Ficus/availability", "%"},
     };
 
 // MQTT-powered weather configs.
