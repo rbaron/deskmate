@@ -1,4 +1,4 @@
-![.github/workflows/deskmate.yml](https://github.com/rbaron/deskmate/workflows/.github/workflows/deskmate.yml/badge.svg)
+![Build](https://github.com/rbaron/deskmate/workflows/deskmate build/badge.svg)
 
 # deskmate
 A hackable & portable [MQTT](https://mqtt.org/)-powered mini dashboard and control center.

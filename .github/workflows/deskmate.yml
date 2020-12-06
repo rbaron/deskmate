@@ -1,4 +1,4 @@
-name: Build
+name: deskmate build
 on: [push, pull_request]
 jobs:
   build:
