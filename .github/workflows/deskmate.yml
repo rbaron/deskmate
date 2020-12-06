@@ -1,4 +1,4 @@
-  on: [push, pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build
-        uses: ./.github/actions/deskmate/build
       - name: Lint
         uses: ./.github/actions/deskmate/lint
+      - name: Build
+        uses: ./.github/actions/deskmate/build

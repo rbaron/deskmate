@@ -14,8 +14,8 @@ class MQTTVerticalBarHorizontalListItem
       public deskmate::mqtt::MQTTSubscriber {
  public:
   MQTTVerticalBarHorizontalListItem(const std::string& display_name,
-                               const std::string& value_topic,
-                               const std::string& availability_topic);
+                                    const std::string& value_topic,
+                                    const std::string& availability_topic);
 
   void HandleMessage(const deskmate::mqtt::MQTTMessage& msg) override;
 

@@ -31,8 +31,8 @@ class App {
       : display_(display), mqtt_buffer_(mqtt_buffer) {}
 
   bool Init(const std::vector<MQTTConfig> &mqtt_configs,
-            const std::vector<MQTTFloatingPointSensorConfig>& sensor_configs,
-            const std::vector<MQTTFloatingPointSensorConfig>& weather_configs);
+            const std::vector<MQTTFloatingPointSensorConfig> &sensor_configs,
+            const std::vector<MQTTFloatingPointSensorConfig> &weather_configs);
 
   bool Tick();
 

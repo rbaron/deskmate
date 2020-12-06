@@ -76,7 +76,8 @@ void HorizontalList::Render(Display* display) const {
 
   // Maybe scroll.
   if (last_scroll_ == InputEvent::kCrankCW) {
-    if (static_cast<int>(selected_ - top_index_ + 1) * item_width_ > inner_size.width) {
+    if (static_cast<int>(selected_ - top_index_ + 1) * item_width_ >
+        inner_size.width) {
       top_index_++;
     }
   } else if (last_scroll_ == InputEvent::kCrankCCW) {

@@ -1,7 +1,7 @@
 FROM alpine:3.12
 
-RUN apk add --no-cache clang cmake make binutils libc-dev g++
+RUN apk add --no-cache clang make
 
-COPY build.sh /build.sh
+COPY lint.sh /lint.sh
 
-ENTRYPOINT ["/build.sh"]
+ENTRYPOINT ["/lint.sh"]

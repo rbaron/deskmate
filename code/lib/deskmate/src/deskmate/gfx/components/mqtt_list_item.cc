@@ -18,8 +18,8 @@ using deskmate::mqtt::MQTTMessage;
 using deskmate::mqtt::MQTTMessageBuffer;
 using deskmate::mqtt::MQTTSubscriber;
 
-constexpr  int kCircleRadius = 8;
-constexpr  int kPadding = 10;
+constexpr int kCircleRadius = 8;
+constexpr int kPadding = 10;
 }  // namespace
 
 MQTTListItem::MQTTListItem(const std::string& display_name,
@@ -32,7 +32,7 @@ MQTTListItem::MQTTListItem(const std::string& display_name,
       mqtt_buffer_(mqtt_buffer) {}
 
 void MQTTListItem::Render(Display* display, bool is_selected) const {
-  const  int char_scale = 2;
+  const int char_scale = 2;
   const Size& size = display->GetSize();
   const Size& char_size = display->GetCharSize();
   Point circle_center{size.height / 2, kCircleRadius + kPadding};

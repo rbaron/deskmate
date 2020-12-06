@@ -2,4 +2,4 @@
 set -eux -o pipefail
 
 cd "$GITHUB_WORKSPACE/code/lib/deskmate"
-ls
+find src -iname *.h -o -iname *.cc | xargs clang-format -n -Werror
