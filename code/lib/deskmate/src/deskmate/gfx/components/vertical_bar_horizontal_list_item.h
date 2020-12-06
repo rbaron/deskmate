@@ -12,8 +12,7 @@ class VerticalBarHorizontalListItem
     : public deskmate::gfx::screens::HorizontalListItem {
  public:
   VerticalBarHorizontalListItem(const std::string& display_name,
-                                double percentage,
-                                bool is_available);
+                                double percentage, bool is_available);
 
   void RenderBody(deskmate::gfx::Display* display,
                   bool is_selected) const override;

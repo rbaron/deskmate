@@ -29,8 +29,8 @@ using deskmate::gfx::screens::Window;
 using deskmate::gfx::screens::WindowedScreen;
 using deskmate::mqtt::MQTTMessageBuffer;
 
-constexpr  int kVerticalBarContainerWidth = 32;
-constexpr  int kCircleContainerWidth = 84;
+constexpr int kVerticalBarContainerWidth = 32;
+constexpr int kCircleContainerWidth = 84;
 
 std::unique_ptr<ListScreen> MakeSwitchesControls(
     const std::vector<MQTTConfig> &mqtt_configs,

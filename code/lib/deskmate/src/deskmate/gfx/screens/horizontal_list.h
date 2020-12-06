@@ -26,7 +26,7 @@ class HorizontalListItem {
 class HorizontalList : public Screen {
  public:
   HorizontalList(std::vector<std::unique_ptr<HorizontalListItem>>& items,
-                  int item_width)
+                 int item_width)
       : items_(std::move(items)),
         selected_(0),
         top_index_(0),
@@ -44,7 +44,7 @@ class HorizontalList : public Screen {
   // rendering.
   mutable std::size_t top_index_;
 
-   int item_width_;
+  int item_width_;
 
   mutable deskmate::input::InputEvent last_scroll_ =
       deskmate::input::InputEvent::kUnknown;

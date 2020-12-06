@@ -95,10 +95,8 @@ class Display {
   virtual void DrawPixelAbsolute(int y, int x, Color color) = 0;
   virtual void DrawRectAbsolute(const Rect& rect, Color color) = 0;
   virtual void FillRectAbsolute(const Rect& rect, Color color) = 0;
-  virtual void DrawCircleAbsolute(Point center, int radius,
-                                  Color color) = 0;
-  virtual void FillCircleAbsolute(Point center, int radius,
-                                  Color color) = 0;
+  virtual void DrawCircleAbsolute(Point center, int radius, Color color) = 0;
+  virtual void FillCircleAbsolute(Point center, int radius, Color color) = 0;
 
   std::stack<Rect> windows_stack_;
 };

@@ -16,8 +16,8 @@ using deskmate::gfx::Size;
 using deskmate::input::InputEvent;
 
 // Padding inside WindowedScreens.
-constexpr  int kPadding = 1;
-constexpr  int kFocusMarkWidth = 12;
+constexpr int kPadding = 1;
+constexpr int kFocusMarkWidth = 12;
 
 int FindNextFocusableIndex(const std::vector<WindowedScreen>& wss,
                            int focused_index) {

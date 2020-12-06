@@ -19,10 +19,10 @@ using deskmate::gfx::Size;
 using deskmate::gfx::constants::kPadding;
 
 // Radius for the little circle that is drawn under the currently selected item.
-constexpr  int kSelectorHeight = 16;
-constexpr  int kSelectorRadius = 6;
-constexpr  int kBaselineHeight = 1;
-constexpr  int kLegendFontScale = 2;
+constexpr int kSelectorHeight = 16;
+constexpr int kSelectorRadius = 6;
+constexpr int kBaselineHeight = 1;
+constexpr int kLegendFontScale = 2;
 }  // namespace
 
 VerticalBarHorizontalListItem::VerticalBarHorizontalListItem(
@@ -54,8 +54,8 @@ void VerticalBarHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
       Size{container.height - selector_rect.size.height, container.width}};
 
   // Bar itself.
-  const  int bar_height = percentage_ * bar_container.size.height;
-  const  int bar_width = bar_container.size.width / 2;
+  const int bar_height = percentage_ * bar_container.size.height;
+  const int bar_width = bar_container.size.width / 2;
   Rect bar{Point{bar_container.size.height - bar_height,
                  (bar_container.size.width - bar_width) / 2},
            Size{bar_height, bar_width}};
@@ -72,14 +72,13 @@ void VerticalBarHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
 }
 
 void VerticalBarHorizontalListItem::RenderLegend(Display* display) const {
-  const  int char_scale = kLegendFontScale;
+  const int char_scale = kLegendFontScale;
   const Size container = display->GetSize();
   const Size char_size = display->GetCharSize();
 
   // Value goes on the right.
   std::string legend = deskmate::utils::to_fixed(100 * percentage_, 1) + "%";
-  const  int legend_width =
-      char_scale * char_size.width * legend.length();
+  const int legend_width = char_scale * char_size.width * legend.length();
   display->PutText((container.height - char_size.height * char_scale) / 2,
                    container.width - legend_width, legend, char_scale,
                    Color::kBlack);

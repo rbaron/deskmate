@@ -5,7 +5,7 @@ namespace deskmate {
 namespace gfx {
 namespace constants {
 
-constexpr  int kPadding = 6;
+constexpr int kPadding = 6;
 
 }  // namespace constants
 }  // namespace gfx
