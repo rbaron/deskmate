@@ -3,9 +3,7 @@
 # deskmate
 A hackable & portable [MQTT](https://mqtt.org/)-powered mini dashboard and control center.
 
-<p align="center">
-  <img alt="Photo of deskmate prototype on a desk" src="assets/img/deskmate.jpeg" height="500"/>
-</p>
+<img alt="Photo of deskmate prototype on a desk" src="assets/img/deskmate.jpeg"/>
 
 For clarity, in this specific configuration, the display above shows:
 * **Left panel** - The states of MQTT "smart" switches. Clicking turns them ON/OFF
