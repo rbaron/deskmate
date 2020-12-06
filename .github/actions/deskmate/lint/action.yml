@@ -1,0 +1,5 @@
+name: 'Lint'
+description: 'Checks for code format'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
