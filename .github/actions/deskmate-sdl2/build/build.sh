@@ -1,8 +1,7 @@
 #!/bin/bash
 set -eux -o pipefail
 
-# Builds paho.mqtt.c.
-git submodule update --init --recursive
+# Builds paho.mqtt.c. This assumes git submodules were already fetched.
 cd "$GITHUB_WORKSPACE"/code/sdl2/third-party/paho.mqtt.c
 mkdir build
 cd build
