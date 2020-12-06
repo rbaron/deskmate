@@ -4,7 +4,7 @@
 A hackable & portable [MQTT](https://mqtt.org/)-powered mini dashboard and control center.
 
 <p align="center">
-  <img alt="Photo of deskmate prototype on a desk" src="assets/img/deskmate.jpg" height="500"/>
+  <img alt="Photo of deskmate prototype on a desk" src="assets/img/deskmate.jpeg" height="500"/>
 </p>
 
 For clarity, in this specific configuration, the display above shows:
