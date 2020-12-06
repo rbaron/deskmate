@@ -1,0 +1,11 @@
+on: [push, pull-request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Builds the deskmate library
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        uses: ./.github/actions/deskmate/build
