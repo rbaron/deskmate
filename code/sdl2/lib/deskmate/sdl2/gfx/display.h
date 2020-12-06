@@ -1,6 +1,8 @@
 #ifndef DESKMATE_SDL_GFX_DISPLAY_H
 #define DESKMATE_SDL_GFX_DISPLAY_H
 
+#include <memory>
+
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "deskmate/gfx/display.h"

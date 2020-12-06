@@ -6,10 +6,11 @@
 #include <queue>
 #include <shared_mutex>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wgnu-anonymous-struct"
+// Temporarily disable compiler error checking on third-party header.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include "MQTTClient.h"
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
 #include "deskmate/mqtt/mqtt.h"
 

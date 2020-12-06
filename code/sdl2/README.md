@@ -7,12 +7,17 @@ Dependencies:
 
 ## Step 1. Build paho.mqtt.c
 ```
-$ git submodule init --update
+$ git submodule update --init --recursive
 $ cd third-party/paho.mqtt.c
 $ mkdir build
 $ cd build
-$ cmake -GNinja -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_SAMPLES=TRUE -DOPENSSL_ROOT_DIR=$HOME/homebrew/opt/openssl@1.1/ ..
+$ cmake -GNinja -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_SAMPLES=TRUE ..
 $ ninja
+```
+
+For `macos`, you might need to point cmake to the correct OpenSSL instalation:
+```
+$ cmake -GNinja -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_SAMPLES=TRUE -DOPENSSL_ROOT_DIR=$HOME/homebrew/opt/openssl@1.1/ ..
 ```
 
 ## Step 2. Configure it
