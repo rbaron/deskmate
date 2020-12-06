@@ -9,6 +9,6 @@ RUN apt-get update && \
 # Paho dependencies.
 RUN apt-get -y install build-essential gcc make cmake cmake-gui cmake-curses-gui libssl-dev
 
-COPY . /app
+COPY build.sh /build.sh
 
-WORKDIR /app
+ENTRYPOINT ["/build.sh"]
