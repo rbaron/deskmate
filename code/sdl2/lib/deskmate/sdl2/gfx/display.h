@@ -14,8 +14,8 @@ using deskmate::gfx::Display;
 using deskmate::gfx::Size;
 
 // Not really.
-constexpr unsigned int kCharHeight = 8;
-constexpr unsigned int kCharWidth = 6;
+constexpr int kCharHeight = 8;
+constexpr int kCharWidth = 6;
 }  // namespace
 
 struct SDLRendererDeleter {
@@ -41,8 +41,7 @@ struct SDLFontDeleter {
 class SDLDisplay : public Display {
  public:
   // font_path is the filesystem path to a monospace font.
-  SDLDisplay(unsigned int height, unsigned int width,
-             const std::string& font_path);
+  SDLDisplay(int height, int width, const std::string& font_path);
   ~SDLDisplay() override;
 
   Size GetCharSize() const override { return {kCharHeight, kCharWidth}; };
@@ -58,9 +57,9 @@ class SDLDisplay : public Display {
                         deskmate::gfx::Color color) override;
   void FillRectAbsolute(const deskmate::gfx::Rect& rect,
                         deskmate::gfx::Color color) override;
-  void DrawCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+  void DrawCircleAbsolute(deskmate::gfx::Point center, int radius,
                           deskmate::gfx::Color color) override;
-  void FillCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+  void FillCircleAbsolute(deskmate::gfx::Point center, int radius,
                           deskmate::gfx::Color color) override;
 
   std::unique_ptr<TTF_Font, SDLFontDeleter> font_;

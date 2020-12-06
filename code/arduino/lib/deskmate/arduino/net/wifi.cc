@@ -12,7 +12,7 @@ constexpr int kConnectionLoopDelay = 100;
 constexpr int kConnectionTries = 3;
 
 bool WiFiTryToConnectOnce(const char* ssid, const char* password) {
-  unsigned long delayed = 0;
+   long delayed = 0;
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     // Serial.printf("[wifi] WiFi.status(): %d\n", WiFi.status());

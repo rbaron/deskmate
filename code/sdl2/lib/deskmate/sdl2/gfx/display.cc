@@ -42,7 +42,7 @@ SDL_Rect FromRect(const Rect& rect) {
 }
 }  // namespace
 
-SDLDisplay::SDLDisplay(unsigned int height, unsigned int width,
+SDLDisplay::SDLDisplay( int height,  int width,
                        const std::string& font_path)
     : Display(height, width) {
   window_ = std::unique_ptr<SDL_Window, SDLWindowDeleter>(SDL_CreateWindow(
@@ -131,14 +131,14 @@ void SDLDisplay::FillRectAbsolute(const Rect& rect, Color color) {
   SDL_RenderFillRect(renderer_.get(), &sdl_rect);
 }
 
-void SDLDisplay::DrawCircleAbsolute(Point center, unsigned int radius,
+void SDLDisplay::DrawCircleAbsolute(Point center,  int radius,
                                     Color color) {
   const SDL_Color& sdl_color = FromColor(color);
   circleRGBA(renderer_.get(), center.x, center.y, radius, sdl_color.r,
              sdl_color.g, sdl_color.b, sdl_color.a);
 }
 
-void SDLDisplay::FillCircleAbsolute(Point center, unsigned int radius,
+void SDLDisplay::FillCircleAbsolute(Point center,  int radius,
                                     Color color) {
   const SDL_Color& sdl_color = FromColor(color);
   filledCircleRGBA(renderer_.get(), center.x, center.y, radius, sdl_color.r,

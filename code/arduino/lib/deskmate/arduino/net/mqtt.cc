@@ -26,7 +26,7 @@ MQTTManager::MQTTManager(const char* server, int port, const char* username,
   // is no other thread.
   pubsub_client_ = std::make_unique<PubSubClient>(
       server, port,
-      [this](const char* topic, byte* payload, unsigned int length) {
+      [this](const char* topic, byte* payload,  int length) {
         std::string str_payload =
             std::string(reinterpret_cast<char*>(payload), length);
         Serial.printf("[mqtt] Got message: %s -> %s\n", topic, str_payload.c_str());

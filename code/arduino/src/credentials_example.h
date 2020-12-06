@@ -16,7 +16,9 @@ using deskmate::app::MQTTConfig;
 
 // Units.
 // Our Arduino drawing library uses the CP437 character set.
-constexpr char kUnitDegreeCelcius[] = "\xf8" "C";
+constexpr char kUnitDegreeCelcius[] =
+    "\xf8"
+    "C";
 
 // WiFi.
 constexpr char kWIFISSID[] = "wifi-ssid";
@@ -35,8 +37,8 @@ constexpr uint8_t kMOSIPin = 13;
 constexpr uint8_t kCSPin = 15;
 
 // Display size.
-constexpr unsigned int kDisplayHeight = 240;
-constexpr unsigned int kDisplayWidth = 400;
+constexpr int kDisplayHeight = 240;
+constexpr int kDisplayWidth = 400;
 
 // Input pins.
 // Crank A & B pins are the rotary encoder's two phase-shifted input pins.
@@ -67,8 +69,7 @@ const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
 // MQTT-powered weather configs.
 const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
     kMQTTWeatherConfigs{
-        {"Zurich", "home/Zurich/temp/retained",
-         "home/Zurich/availability"},
+        {"Zurich", "home/Zurich/temp/retained", "home/Zurich/availability"},
         {"Office", "home/AirSensor/air_temperature/retained",
          "home/AirSensor/availability"},
     };
@@ -76,8 +77,8 @@ const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
 // MQTT-powered weather configs.
 const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
     kMQTTWeatherConfigs{
-        {"Zurich", "home/Zurich/temp/retained",
-         "home/Zurich/availability", kUnitDegreeCelcius},
+        {"Zurich", "home/Zurich/temp/retained", "home/Zurich/availability",
+         kUnitDegreeCelcius},
         {"Office", "home/AirSensor/air_temperature/retained",
          "home/AirSensor/availability", kUnitDegreeCelcius},
     };

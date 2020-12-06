@@ -37,8 +37,7 @@ class Window : public Screen {
   std::vector<WindowedScreen> windowed_screens_;
 
   // Points to the currently focused WindowScreen.
-  // TODO: use a circular list.
-  int focused_index_ = -1;
+  std::size_t focused_index_ = -1;
 };
 
 }  // namespace screens

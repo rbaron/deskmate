@@ -21,11 +21,12 @@ class TextListItem : public ListItem {
       : display_name_(display_name) {}
 
   void Render(Display* display, bool is_selected) const override {
-    const unsigned int char_scale = 2;
+    const int char_scale = 2;
     const Size& size = display->GetSize();
     const Size& char_size = display->GetCharSize();
     std::string text = display_name_;
-    if (text.length() * char_scale * char_size.width > size.width) {
+    if (static_cast<int>(text.length()) * char_scale * char_size.width >
+        size.width) {
       text = text.substr(0, size.width / (char_scale * char_size.width) - 1);
       text += ".";
     }

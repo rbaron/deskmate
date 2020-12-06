@@ -19,10 +19,10 @@ using deskmate::gfx::Size;
 using deskmate::gfx::constants::kPadding;
 
 // Radius for the little circle that is drawn under the currently selected item.
-constexpr unsigned int kSelectorHeight = 16;
-constexpr unsigned int kSelectorRadius = 6;
-constexpr unsigned int kBaselineHeight = 1;
-constexpr unsigned int kLegendFontScale = 2;
+constexpr  int kSelectorHeight = 16;
+constexpr  int kSelectorRadius = 6;
+constexpr  int kBaselineHeight = 1;
+constexpr  int kLegendFontScale = 2;
 }  // namespace
 
 VerticalBarHorizontalListItem::VerticalBarHorizontalListItem(
@@ -54,8 +54,8 @@ void VerticalBarHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
       Size{container.height - selector_rect.size.height, container.width}};
 
   // Bar itself.
-  const unsigned int bar_height = percentage_ * bar_container.size.height;
-  const unsigned int bar_width = bar_container.size.width / 2;
+  const  int bar_height = percentage_ * bar_container.size.height;
+  const  int bar_width = bar_container.size.width / 2;
   Rect bar{Point{bar_container.size.height - bar_height,
                  (bar_container.size.width - bar_width) / 2},
            Size{bar_height, bar_width}};
@@ -72,13 +72,13 @@ void VerticalBarHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
 }
 
 void VerticalBarHorizontalListItem::RenderLegend(Display* display) const {
-  const unsigned int char_scale = 2;
+  const  int char_scale = kLegendFontScale;
   const Size container = display->GetSize();
   const Size char_size = display->GetCharSize();
 
   // Value goes on the right.
   std::string legend = deskmate::utils::to_fixed(100 * percentage_, 1) + "%";
-  const unsigned int legend_width =
+  const  int legend_width =
       char_scale * char_size.width * legend.length();
   display->PutText((container.height - char_size.height * char_scale) / 2,
                    container.width - legend_width, legend, char_scale,
@@ -88,7 +88,7 @@ void VerticalBarHorizontalListItem::RenderLegend(Display* display) const {
   const int chars_left =
       (container.width - legend_width) / (char_scale * char_size.width);
   std::string display_name(display_name_);
-  if (display_name_.length() > chars_left) {
+  if (static_cast<int>(display_name_.length()) > chars_left) {
     display_name = display_name.substr(0, chars_left - 1) + ".";
   }
   display->PutText((container.height - char_size.height * char_scale) / 2, 0,

@@ -6,7 +6,11 @@
 #include <queue>
 #include <shared_mutex>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-anonymous-struct"
 #include "MQTTClient.h"
+#pragma clang diagnostic pop
+
 #include "deskmate/mqtt/mqtt.h"
 
 namespace deskmate {

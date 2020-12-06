@@ -7,9 +7,9 @@ namespace deskmate {
 namespace utils {
 
 template <typename FloatingPoint>
-std::string to_fixed(FloatingPoint value, const int decimal_places) {
+std::string to_fixed(FloatingPoint value, const int precision) {
   std::ostringstream oss;
-  oss.precision(1);
+  oss.precision(precision);
   oss << std::fixed << value;
   return oss.str();
 }

@@ -13,8 +13,8 @@ enum class Color {
 };
 
 struct Point {
-  unsigned int y;
-  unsigned int x;
+  int y;
+  int x;
   Point& operator+=(const Point& rhs) {
     y += rhs.y;
     x += rhs.x;
@@ -31,8 +31,8 @@ Point operator+(Point lhs, const Point& rhs);
 Point operator-(Point lhs, const Point& rhs);
 
 struct Size {
-  unsigned int height;
-  unsigned int width;
+  int height;
+  int width;
 };
 
 struct Rect {
@@ -50,7 +50,7 @@ struct Rect {
 //        y
 class Display {
  public:
-  Display(unsigned int height, unsigned int width);
+  Display(int height, int width);
   virtual ~Display() = default;
 
   // Changes the "apparent" drawable area. These are convenience functions for
@@ -73,8 +73,8 @@ class Display {
   void DrawPixel(int y, int x, Color color);
   void DrawRect(Rect rect, Color color);
   void FillRect(Rect rect, Color color);
-  void DrawCircle(Point center, unsigned int radius, Color color);
-  void FillCircle(Point center, unsigned int radius, Color color);
+  void DrawCircle(Point center, int radius, Color color);
+  void FillCircle(Point center, int radius, Color color);
 
   // TODO: pass coordinates via Point.
   void PutText(int y, int x, const std::string& text, int scale, Color fg,
@@ -95,9 +95,9 @@ class Display {
   virtual void DrawPixelAbsolute(int y, int x, Color color) = 0;
   virtual void DrawRectAbsolute(const Rect& rect, Color color) = 0;
   virtual void FillRectAbsolute(const Rect& rect, Color color) = 0;
-  virtual void DrawCircleAbsolute(Point center, unsigned int radius,
+  virtual void DrawCircleAbsolute(Point center, int radius,
                                   Color color) = 0;
-  virtual void FillCircleAbsolute(Point center, unsigned int radius,
+  virtual void FillCircleAbsolute(Point center, int radius,
                                   Color color) = 0;
 
   std::stack<Rect> windows_stack_;

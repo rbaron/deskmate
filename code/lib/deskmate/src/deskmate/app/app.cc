@@ -3,13 +3,11 @@
 #include "deskmate/app/config.h"
 #include "deskmate/gfx/components/mqtt_circle_horizontal_list_item.h"
 #include "deskmate/gfx/components/mqtt_list_item.h"
-// #include "deskmate/gfx/components/mqtt_vertical_bar_list_item.h"
 #include "deskmate/gfx/components/mqtt_vertical_bar_horizontal_list_item.h"
 #include "deskmate/gfx/components/text_list_item.h"
 #include "deskmate/gfx/display.h"
 #include "deskmate/gfx/screens/horizontal_list.h"
 #include "deskmate/gfx/screens/list.h"
-// #include "deskmate/gfx/screens/vertical_bars_list.h"
 #include "deskmate/gfx/screens/window.h"
 #include "deskmate/input/input.h"
 #include "deskmate/mqtt/mqtt.h"
@@ -19,25 +17,20 @@ namespace app {
 namespace {
 using deskmate::app::MQTTConfig;
 using deskmate::app::MQTTFloatingPointSensorConfig;
-using deskmate::gfx::Display;
 using deskmate::gfx::Size;
 using deskmate::gfx::components::MQTTCircleHorizontalListItem;
 using deskmate::gfx::components::MQTTListItem;
 using deskmate::gfx::components::MQTTVerticalBarHorizontalListItem;
-using deskmate::gfx::components::TextListItem;
 using deskmate::gfx::screens::HorizontalList;
 using deskmate::gfx::screens::HorizontalListItem;
 using deskmate::gfx::screens::ListItem;
 using deskmate::gfx::screens::ListScreen;
 using deskmate::gfx::screens::Window;
 using deskmate::gfx::screens::WindowedScreen;
-using deskmate::input::InputEventHandler;
-using deskmate::mqtt::MQTTMessage;
 using deskmate::mqtt::MQTTMessageBuffer;
-using deskmate::mqtt::MQTTSubscriber;
 
-constexpr unsigned int kVerticalBarContainerWidth = 32;
-constexpr unsigned int kCircleContainerWidth = 84;
+constexpr  int kVerticalBarContainerWidth = 32;
+constexpr  int kCircleContainerWidth = 84;
 
 std::unique_ptr<ListScreen> MakeSwitchesControls(
     const std::vector<MQTTConfig> &mqtt_configs,

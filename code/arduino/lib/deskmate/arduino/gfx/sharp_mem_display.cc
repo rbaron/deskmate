@@ -19,9 +19,8 @@ constexpr int ColorToInt(Color color) { return color == Color::kBlack ? 0 : 1; }
 
 }  // namespace
 
-SharpMemDisplay::SharpMemDisplay(unsigned int height, unsigned int width,
-                                 uint8_t sck_pin, uint8_t mosi_pin,
-                                 uint8_t cs_pin)
+SharpMemDisplay::SharpMemDisplay(int height, int width, uint8_t sck_pin,
+                                 uint8_t mosi_pin, uint8_t cs_pin)
     : Display(height, width),
       display_(std::make_unique<Adafruit_SharpMem>(sck_pin, mosi_pin, cs_pin,
                                                    width, height)) {
@@ -69,13 +68,13 @@ void SharpMemDisplay::FillRectAbsolute(const deskmate::gfx::Rect& rect,
 }
 
 void SharpMemDisplay::DrawCircleAbsolute(deskmate::gfx::Point center,
-                                         unsigned int radius,
+                                         int radius,
                                          deskmate::gfx::Color color) {
   display_->drawCircle(center.x, center.y, radius, ColorToInt(color));
 }
 
 void SharpMemDisplay::FillCircleAbsolute(deskmate::gfx::Point center,
-                                         unsigned int radius,
+                                         int radius,
                                          deskmate::gfx::Color color) {
   display_->fillCircle(center.x, center.y, radius, ColorToInt(color));
 }

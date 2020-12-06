@@ -33,7 +33,7 @@ class SDLIniter {
   ~SDLIniter() { SDL_Quit(); }
 };
 
-int main(int argc, char* argv[]) {
+int main() {
   SDLIniter sdl_initer;
   SDLDisplay display(kDisplayHeight, kDisplayWidth, kFontPath);
 

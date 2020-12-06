@@ -18,23 +18,24 @@ using deskmate::gfx::Size;
 using deskmate::gfx::constants::kPadding;
 }  // namespace
 
-CircleHorizontalListItem::CircleHorizontalListItem(
-    const std::string& display_name, const std::string& unit, double value,
-    bool is_available)
-    : display_name_(display_name),
-      unit_(unit),
+CircleHorizontalListItem::CircleHorizontalListItem(std::string display_name,
+                                                   std::string unit,
+                                                   double value,
+                                                   bool is_available)
+    : display_name_(std::move(display_name)),
+      unit_(std::move(unit)),
       value_(value),
       is_available_(is_available) {}
 
 void CircleHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
                                           bool is_selected) const {
-  const unsigned int char_scale = 2;
+  const int char_scale = 2;
   const Size container = display->GetSize();
   const Size char_size = display->GetCharSize();
 
   const Point center{container.height / 2, container.width / 2};
-  const unsigned int outer_radius = (container.width - kPadding) / 2;
-  const unsigned int inner_radius = outer_radius - (is_selected ? 4 : 1);
+  const int outer_radius = (container.width - kPadding) / 2;
+  const int inner_radius = outer_radius - (is_selected ? 4 : 1);
 
   // Draw black circle.
   display->FillCircle(center, outer_radius, Color::kBlack);
@@ -55,14 +56,13 @@ void CircleHorizontalListItem::RenderBody(deskmate::gfx::Display* display,
 }
 
 void CircleHorizontalListItem::RenderLegend(Display* display) const {
-  const unsigned int char_scale = 2;
+  const int char_scale = 2;
   const Size container = display->GetSize();
   const Size char_size = display->GetCharSize();
 
   // Value goes on the right.
   std::string legend = deskmate::utils::to_fixed(value_, 1) + unit_;
-  const unsigned int legend_width =
-      char_scale * char_size.width * legend.length();
+  const int legend_width = char_scale * char_size.width * legend.length();
   display->PutText((container.height - char_size.height * char_scale) / 2,
                    container.width - legend_width, legend, char_scale,
                    Color::kBlack);
@@ -71,7 +71,7 @@ void CircleHorizontalListItem::RenderLegend(Display* display) const {
   const int chars_left =
       (container.width - legend_width) / (char_scale * char_size.width);
   std::string display_name(display_name_);
-  if (display_name_.length() > chars_left) {
+  if (static_cast<int>(display_name_.length()) > chars_left) {
     display_name = display_name.substr(0, chars_left - 1) + ".";
   }
   display->PutText((container.height - char_size.height * char_scale) / 2, 0,

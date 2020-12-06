@@ -11,9 +11,8 @@ namespace components {
 class CircleHorizontalListItem
     : public deskmate::gfx::screens::HorizontalListItem {
  public:
-  CircleHorizontalListItem(const std::string& display_name,
-                           const std::string& unit, double value,
-                           bool is_available);
+  CircleHorizontalListItem(std::string display_name, std::string unit,
+                           double value, bool is_available);
 
   void RenderBody(deskmate::gfx::Display* display,
                   bool is_selected) const override;

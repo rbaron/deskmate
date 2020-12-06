@@ -7,7 +7,7 @@ namespace deskmate {
 namespace arduino {
 namespace input {
 
-constexpr unsigned int kDebounceMillis = 5;
+constexpr int kDebounceMillis = 5;
 
 void SetupButtonsInterruptHandler(uint8_t crank_pin, uint8_t a_pin,
                                   uint8_t b_pin, uint8_t c_pin,

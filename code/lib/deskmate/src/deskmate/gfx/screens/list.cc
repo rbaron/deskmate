@@ -14,10 +14,10 @@ using deskmate::gfx::Color;
 using deskmate::gfx::Rect;
 using deskmate::input::InputEvent;
 
-constexpr unsigned int kItemHeight = 32;
+constexpr int kItemHeight = 32;
 
 // Scrollbar
-constexpr unsigned int kScrollBarWidth = 4;
+constexpr int kScrollBarWidth = 4;
 }  // namespace
 
 ListScreen::~ListScreen() {}
@@ -50,7 +50,8 @@ void ListScreen::Render(Display* display) const {
 
   // Maybe scroll.
   if (last_scroll_ == InputEvent::kCrankCW) {
-    if ((selected_ - top_index_ + 1) * kItemHeight > window_size.height) {
+    if (static_cast<int>(selected_ - top_index_ + 1) * kItemHeight >
+        window_size.height) {
       top_index_++;
     }
   } else if (last_scroll_ == InputEvent::kCrankCCW) {
@@ -61,14 +62,15 @@ void ListScreen::Render(Display* display) const {
   last_scroll_ = InputEvent::kUnknown;
 
   // We only show whole items for now.
-  const int n_items_to_show = window_size.height / kItemHeight;
+  const std::size_t n_items_to_show = window_size.height / kItemHeight;
 
   const bool draw_scrollbar =
       items_.size() > 1 && items_.size() > n_items_to_show;
 
-  for (int i = 0; i < n_items_to_show && i + top_index_ < items_.size(); i++) {
-    int item_index = i + top_index_;
-    Rect item_window{Point{static_cast<unsigned int>(i * kItemHeight), 0},
+  for (std::size_t i = 0; i < n_items_to_show && i + top_index_ < items_.size();
+       i++) {
+    const std::size_t item_index = i + top_index_;
+    Rect item_window{Point{static_cast<int>(i * kItemHeight), 0},
                      {kItemHeight, window_size.width -
                                        (draw_scrollbar ? kScrollBarWidth : 0)}};
     display->PushWindow(item_window);
@@ -78,9 +80,9 @@ void ListScreen::Render(Display* display) const {
 
   // Draw scrollbar.
   if (draw_scrollbar) {
-    const unsigned int scrollbar_height = static_cast<double>(n_items_to_show) /
-                                          items_.size() * window_size.height;
-    const unsigned int scrollbar_top_pixel =
+    const int scrollbar_height = static_cast<double>(n_items_to_show) /
+                                 items_.size() * window_size.height;
+    const int scrollbar_top_pixel =
         static_cast<double>(window_size.height - scrollbar_height) /
         (items_.size() - n_items_to_show) * top_index_;
     Rect scroll_rect{

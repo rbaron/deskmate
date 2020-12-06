@@ -30,8 +30,8 @@ constexpr int kMQTTPort = 1883;
 // This can be relative to the directory where the binary is executed or
 // absolute.
 constexpr char kFontPath[] = "../assets/fonts/DejaVu/DejaVuSansMono.ttf";
-constexpr unsigned int kDisplayHeight = 240;
-constexpr unsigned int kDisplayWidth = 400;
+constexpr int kDisplayHeight = 240;
+constexpr int kDisplayWidth = 400;
 
 // MQTT-powered switches.
 const std::vector<MQTTConfig> kMQTTConfigs{
@@ -53,8 +53,8 @@ const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
 // MQTT-powered weather configs.
 const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
     kMQTTWeatherConfigs{
-        {"Zurich", "home/Zurich/temp/retained",
-         "home/Zurich/availability", kUnitDegreeCelcius},
+        {"Zurich", "home/Zurich/temp/retained", "home/Zurich/availability",
+         kUnitDegreeCelcius},
         {"Office", "home/AirSensor/air_temperature/retained",
          "home/AirSensor/availability", kUnitDegreeCelcius},
     };

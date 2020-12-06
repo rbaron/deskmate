@@ -18,11 +18,11 @@ using deskmate::gfx::Size;
 using deskmate::gfx::constants::kPadding;
 using deskmate::input::InputEvent;
 
-constexpr unsigned int kLegendCharScale = 2;
+constexpr int kLegendCharScale = 2;
 
 // Scrollbar.
-constexpr unsigned int kScrollbarVerticalPadding = kPadding;
-constexpr unsigned int kScrollbarHeight = 3;
+constexpr int kScrollbarVerticalPadding = kPadding;
+constexpr int kScrollbarHeight = 3;
 }  // namespace
 
 HorizontalList::~HorizontalList() = default;
@@ -56,7 +56,7 @@ void HorizontalList::Render(Display* display) const {
   const Size inner_size = display->GetSize();
 
   // Legend area. Goes in the bottom.
-  const unsigned int legend_height = kLegendCharScale * char_size.height;
+  const int legend_height = kLegendCharScale * char_size.height;
   const Rect legend_rect{Point{inner_size.height - legend_height, 0},
                          Size{legend_height, inner_size.width}};
 
@@ -70,13 +70,13 @@ void HorizontalList::Render(Display* display) const {
   const Rect items_rect{Point{0, 0},
                         Size{scrollbar_rect.point.y, inner_size.width}};
 
-  const int n_items_to_show = inner_size.width / item_width_;
+  const std::size_t n_items_to_show = inner_size.width / item_width_;
   const bool should_draw_scrollbar =
       items_.size() > 1 && items_.size() > n_items_to_show;
 
   // Maybe scroll.
   if (last_scroll_ == InputEvent::kCrankCW) {
-    if ((selected_ - top_index_ + 1) * item_width_ > inner_size.width) {
+    if (static_cast<int>(selected_ - top_index_ + 1) * item_width_ > inner_size.width) {
       top_index_++;
     }
   } else if (last_scroll_ == InputEvent::kCrankCCW) {
@@ -88,9 +88,10 @@ void HorizontalList::Render(Display* display) const {
 
   // Draw items.
   display->PushWindow(items_rect);
-  for (int i = 0; i < n_items_to_show && i + top_index_ < items_.size(); i++) {
+  for (std::size_t i = 0; i < n_items_to_show && i + top_index_ < items_.size();
+       i++) {
     const auto& item = items_[i + top_index_];
-    Rect item_rect = {Point{0, i * item_width_},
+    Rect item_rect = {Point{0, static_cast<int>(i) * item_width_},
                       Size{items_rect.size.height, item_width_}};
 
     bool is_selected = i + top_index_ == selected_;
@@ -111,9 +112,9 @@ void HorizontalList::Render(Display* display) const {
 
   if (should_draw_scrollbar) {
     display->PushWindow(scrollbar_rect);
-    const unsigned int scrollbar_width =
+    const int scrollbar_width =
         static_cast<double>(n_items_to_show) / items_.size() * inner_size.width;
-    const unsigned int scrollbar_left_pixel =
+    const int scrollbar_left_pixel =
         static_cast<double>(inner_size.width - scrollbar_width) /
         (items_.size() - n_items_to_show) * top_index_;
     Rect scrollbar_bar_rect{

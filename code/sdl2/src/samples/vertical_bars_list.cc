@@ -21,7 +21,7 @@ using deskmate::credentials::kDisplayHeight;
 using deskmate::credentials::kDisplayWidth;
 using deskmate::credentials::kFontPath;
 
-constexpr unsigned int kItemWidth = 32;
+constexpr int kItemWidth = 32;
 
 class SDLIniter {
  public:
@@ -38,7 +38,7 @@ class SDLIniter {
   ~SDLIniter() { SDL_Quit(); }
 };
 
-int main(int argc, char* argv[]) {
+int main() {
   std::srand(0);
 
   SDLIniter sdl_initer;

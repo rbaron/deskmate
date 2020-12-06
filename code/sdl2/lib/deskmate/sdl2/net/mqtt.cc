@@ -25,12 +25,9 @@ constexpr int kKeepAliveIntervalSecs = 20;
 constexpr int kSubscribeQoS = 1;
 constexpr int kPublishQoS = 0;
 
-void OnConnLost(void* context, char* cause) {
-  std::cerr << "MQTT connection lost!\n";
-}
-
 void TraceCallback(enum MQTTCLIENT_TRACE_LEVELS level, char* message) {
-  std::cerr << "[trace] " << message << std::endl;
+  std::cerr << "[trace]"
+            << "[" << level << "] " << message << std::endl;
 }
 }  // namespace
 
@@ -41,18 +38,23 @@ PahoMQTTManager::PahoMQTTManager(const char* server, int port,
       std::unique_ptr<MQTTClient, PahoMQTTClientDeleter>(new MQTTClient);
 
   // Debugging traces.
-  // MQTTClient_setTraceLevel(MQTTCLIENT_TRACE_MINIMUM);
-  // MQTTClient_setTraceCallback(TraceCallback);
+  if (false) {
+    MQTTClient_setTraceLevel(MQTTCLIENT_TRACE_MINIMUM);
+    MQTTClient_setTraceCallback(TraceCallback);
+  }
 
   if (!mqtt_client_) {
     std::cerr << "Unable to initialize MQTTClient" << std::endl;
     std::exit(-1);
   }
 
+  std::string server_addr{std::string("tcp://") + server + ":" +
+                          std::to_string(port)};
+
   int ret;
-  if ((ret = MQTTClient_create(mqtt_client_.get(), server, client_id,
-                               MQTTCLIENT_PERSISTENCE_NONE, nullptr)) !=
-      MQTTCLIENT_SUCCESS) {
+  if ((ret = MQTTClient_create(mqtt_client_.get(), server_addr.c_str(),
+                               client_id, MQTTCLIENT_PERSISTENCE_NONE,
+                               nullptr)) != MQTTCLIENT_SUCCESS) {
     std::cerr << "Unable to create client: " << ret << std::endl;
     std::exit(-1);
   }

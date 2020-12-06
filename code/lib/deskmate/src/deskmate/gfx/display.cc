@@ -24,7 +24,7 @@ Point operator-(Point lhs, const Point& rhs) {
   return lhs;
 }
 
-Display::Display(unsigned int height, unsigned int width) {
+Display::Display( int height,  int width) {
   windows_stack_.push(Rect{Point{0, 0}, Size{height, width}});
 }
 
@@ -55,13 +55,13 @@ void Display::FillRect(Rect rect, Color color) {
   FillRectAbsolute(rect, color);
 }
 
-void Display::DrawCircle(Point center, unsigned int radius, Color color) {
+void Display::DrawCircle(Point center,  int radius, Color color) {
   const Rect& window = windows_stack_.top();
   center += window.point;
   DrawCircleAbsolute(center, radius, color);
 }
 
-void Display::FillCircle(Point center, unsigned int radius, Color color) {
+void Display::FillCircle(Point center,  int radius, Color color) {
   const Rect& window = windows_stack_.top();
   center += window.point;
   FillCircleAbsolute(center, radius, color);

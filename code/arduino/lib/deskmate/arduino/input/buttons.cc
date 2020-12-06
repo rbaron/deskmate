@@ -30,8 +30,8 @@ void HandleButtonPush(InputEvent event) {
 // void ISRAPush() {
 //   int value = digitalRead(27);
 //   Serial.printf("Value: %s\n", value == LOW ? "LOW" : "HIGH");
-//   static unsigned long last_millis = 0;
-//   unsigned long now = millis();
+//   static  long last_millis = 0;
+//    long now = millis();
 //   if (now - last_millis > 100) {
 //     if (value == LOW) {
 //       Serial.println("Pressed!");
@@ -47,8 +47,8 @@ void HandleButtonPush(InputEvent event) {
 // no releases, and fires a button press upon release, if you hold it
 // for more than kDebounceMillis. Not good.
 // void ISRAPush() {
-//   static unsigned long last_millis = 0;
-//   unsigned long now = millis();
+//   static  long last_millis = 0;
+//    long now = millis();
 //   if (now - last_millis > 100) {
 //     Serial.println("Pressed!");
 //   }
@@ -65,8 +65,8 @@ void HandleButtonPush(InputEvent event) {
 // In practice, this seems to work well enough, though.
 // void ISRAPush() {
 //   static bool pushed = false;
-//   static unsigned long last_millis = 0;
-//   unsigned long now = millis();
+//   static  long last_millis = 0;
+//    long now = millis();
 //   if (now - last_millis > 5) {
 //     if (!pushed) {
 //       Serial.println("Pressed!");
@@ -81,8 +81,8 @@ void HandleButtonPush(InputEvent event) {
 #define DEBOUNCED_ISR(NAME, PUSH_EVENT, RELEASE_EVENT) \
   void NAME() {                                        \
     static bool pushed = false;                        \
-    static unsigned long last_millis = 0;              \
-    unsigned long now = millis();                      \
+    static long last_millis = 0;                       \
+    long now = millis();                               \
     if (now - last_millis > kDebounceMillis) {         \
       if (!pushed) {                                   \
         HandleButtonPush(PUSH_EVENT);                  \

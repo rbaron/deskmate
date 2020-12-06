@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.18.4)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_FIND_DEBUG_MODE 1)
+#set(CMAKE_FIND_DEBUG_MODE 1)
 
-project (deskmate)
+project (deskmate-sdl2)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${deskmate_SOURCE_DIR}/cmake")
+add_compile_options(-Wall -Wextra -pedantic -Werror)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${deskmate-sdl2_SOURCE_DIR}/cmake")
 
 add_subdirectory(../lib/deskmate deskmate-lib-build)
 
@@ -26,7 +28,7 @@ include_directories(
 
 #message(STATUS "${SDL2_INCLUDE_DIRS}")
 #message(STATUS "${SDL2_TTF_INCLUDE_DIRS}")
-message(STATUS "${SDL2_GFX_INCLUDE_DIRS}")
+#message(STATUS "${SDL2_GFX_INCLUDE_DIRS}")
 
 set(SRC
   lib/deskmate/sdl2/gfx/display.cc

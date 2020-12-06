@@ -14,14 +14,14 @@ namespace arduino {
 namespace gfx {
 
 namespace {
-constexpr unsigned int kCharHeight = 8;
-constexpr unsigned int kCharWidth = 6;
+constexpr int kCharHeight = 8;
+constexpr int kCharWidth = 6;
 }  // namespace
 
 class SharpMemDisplay : public deskmate::gfx::Display {
  public:
-  SharpMemDisplay(unsigned int height, unsigned int width, uint8_t sck_pin,
-                  uint8_t mosi_pin, uint8_t cs_pin);
+  SharpMemDisplay(int height, int width, uint8_t sck_pin, uint8_t mosi_pin,
+                  uint8_t cs_pin);
   ~SharpMemDisplay() override;
 
   deskmate::gfx::Size GetCharSize() const override {
@@ -42,9 +42,9 @@ class SharpMemDisplay : public deskmate::gfx::Display {
                         deskmate::gfx::Color color) override;
   void FillRectAbsolute(const deskmate::gfx::Rect& rect,
                         deskmate::gfx::Color color) override;
-  void DrawCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+  void DrawCircleAbsolute(deskmate::gfx::Point center, int radius,
                           deskmate::gfx::Color color) override;
-  void FillCircleAbsolute(deskmate::gfx::Point center, unsigned int radius,
+  void FillCircleAbsolute(deskmate::gfx::Point center, int radius,
                           deskmate::gfx::Color color) override;
 
   std::unique_ptr<Adafruit_SharpMem> display_;
