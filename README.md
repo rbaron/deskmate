@@ -1,10 +1,10 @@
 [![deskmate build](https://github.com/rbaron/deskmate/workflows/deskmate%20build/badge.svg)](https://github.com/rbaron/deskmate/actions?query=workflow%3A%22deskmate+build%22)
-
+[![deskmate-sdl2 build](https://github.com/rbaron/deskmate/workflows/deskmate-sdl2%20build/badge.svg)](https://github.com/rbaron/deskmate/actions?query=workflow%3A%22deskmate-sdl2+build%22)
 # deskmate
 A hackable & portable [MQTT](https://mqtt.org/)-powered mini dashboard and control center.
 
 <p align="center">
-  <img alt="Photo of deskmate prototype on a desk" src="assets/img/deskmate.jpg" height="500"/>
+  <img alt="Photo of deskmate prototype on a desk" src="assets/img/deskmate.jpeg" height="500"/>
 </p>
 
 For clarity, in this specific configuration, the display above shows:

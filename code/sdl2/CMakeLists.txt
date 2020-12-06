@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18.4)
+cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_FIND_DEBUG_MODE 1)
 
@@ -38,16 +38,21 @@ set(SRC
 
 link_directories(${CMAKE_SOURCE_DIR}/third-party/paho.mqtt.c/build/src)
 
-set(LIBS
+set(OWN_LIBS
   deskmate
   ${SDL2_LIBRARIES}
   ${SDL2_TTF_LIBRARIES}
   ${SDL2_GFX_LIBRARIES}
-  libpaho-mqtt3cs.dylib
 )
 
-# Do we need to specify the extension .dylib here? Is there a better, cross-platform way
-# of doing this?
+if (APPLE)
+  set(PAHO_LIB libpaho-mqtt3cs.dylib)
+else ()
+  set(PAHO_LIB libpaho-mqtt3cs.so)
+endif ()
+
+set(LIBS ${OWN_LIBS} ${PAHO_LIB})
+
 add_executable(deskmate-sdl2 src/main.cc ${SRC})
 target_link_libraries(deskmate-sdl2 ${LIBS})
 

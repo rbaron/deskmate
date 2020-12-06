@@ -1,0 +1,15 @@
+name: deskmate-sdl2 build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Checks format & builds the deskmate-sdl2 binary
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Lint
+        uses: ./.github/actions/deskmate-sdl2/lint
+      - name: Build
+        uses: ./.github/actions/deskmate-sdl2/build

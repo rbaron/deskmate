@@ -1,0 +1,4 @@
+code/lib/deskmate/build
+code/sdl2/build
+code/sdl2/third-party/*
+code/arduino/.pio
