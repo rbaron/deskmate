@@ -1,13 +1,20 @@
-FROM ubuntu:20.04
+# Since deskmate-sdl2 depends on the desmkate library,
+# this Docker image has to be constructed from the repo's
+# root directory:
+# docker build -f ./code/sdl2/Dockerfile -t deskmate-sdl2-alpine .
+FROM alpine:3.12
 
-ENV TZ=America/New_York
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apk add --no-cache git clang cmake make binutils build-base libc-dev g++ sdl2-static sdl2_ttf-dev samurai openssl-dev
 
-RUN apt-get update && \
-    apt-get -y install git make cmake clang clang-format ninja-build libsdl2-dev  libsdl2-ttf-dev libsdl2-gfx-dev
-
-# Paho dependencies.
-RUN apt-get -y install build-essential gcc make cmake cmake-gui cmake-curses-gui libssl-dev
+# Download, compile and install SDL2_gfx.
+RUN mkdir /opt/SDL2_gfx && \
+    cd /opt/SDL2_gfx && \
+    wget http://www.ferzkopp.net/Software/SDL2_gfx/SDL2_gfx-1.0.4.tar.gz && \
+    tar zxvf SDL2_gfx-1.0.4.tar.gz && \
+    cd SDL2_gfx-1.0.4 && \
+    ./configure && \
+    make && \
+    make install
 
 COPY build.sh /build.sh
 
