@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 set -eux -o pipefail
 
 # Builds paho.mqtt.c. This assumes git submodules were already fetched.

@@ -5,6 +5,11 @@ Dependencies:
 * [Eclipse Paho C Library](https://www.eclipse.org/paho/). See below how to build it.
 * CMake
 
+## Example - Linux build
+This directory contains `Dockerfile`s that builds `deskmate-sdl2`:
+- `Dockerfile` - Linux Alpine build
+- `Dockerfile.ubuntu` - Ubuntu build
+
 ## Step 1. Build paho.mqtt.c
 ```
 $ git submodule update --init --recursive
@@ -21,7 +26,7 @@ $ cmake -GNinja -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_SAMPLES=TRUE -DOPENSSL_ROOT_DI
 ```
 
 ## Step 2. Configure it
-Copy `src/credentials_template.h` into `src/credentials.h` and edit it. It contains MQTT credentials and sensors/switches specifications.
+Copy `src/credentials_example.h` into `src/credentials.h` and edit it. It contains MQTT credentials and sensors/switches specifications.
 
 ## Step 3. Build `deskmate-sdl2`
 
