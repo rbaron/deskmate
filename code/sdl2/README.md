@@ -6,7 +6,7 @@ Dependencies:
 * CMake
 
 ## Example - Linux build
-This directory contains `Dockerfile`s that builds `deskmate-sdl2`:
+This directory contains `Dockerfile`s that build `deskmate-sdl2`:
 - `Dockerfile` - Linux Alpine build
 - `Dockerfile.ubuntu` - Ubuntu build
 
