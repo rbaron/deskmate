@@ -1,5 +1,6 @@
 [![deskmate build](https://github.com/rbaron/deskmate/workflows/deskmate%20build/badge.svg)](https://github.com/rbaron/deskmate/actions?query=workflow%3A%22deskmate+build%22)
 [![deskmate-sdl2 build](https://github.com/rbaron/deskmate/workflows/deskmate-sdl2%20build/badge.svg)](https://github.com/rbaron/deskmate/actions?query=workflow%3A%22deskmate-sdl2+build%22)
+[![deskmate-arduino build](https://github.com/rbaron/deskmate/workflows/deskmate-arduino%20build/badge.svg)](https://github.com/rbaron/deskmate/actions?query=workflow%3A%22deskmate-arduino+build%22)
 # deskmate
 A hackable & portable [MQTT](https://mqtt.org/)-powered mini dashboard and control center.
 

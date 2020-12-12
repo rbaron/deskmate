@@ -1,0 +1,21 @@
+name: deskmate-arduino build
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Checks format & builds the esp32 deskmate-arduino binary
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Lint
+        uses: ./.github/actions/deskmate-arduino/lint
+      - name: Build
+        uses: ./.github/actions/deskmate-arduino/build
