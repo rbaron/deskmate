@@ -60,18 +60,10 @@ const std::vector<MQTTConfig> kMQTTConfigs{
 // MQTT-powered floating point sensors.
 const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
     kMQTTFloatingPointSensors{
-        {"Monstera", "home/Monstera/soil_moisture_percent/retained",
-         "home/Monstera/availability"},
-        {"Ficus", "home/Ficus/soil_moisture_percent/retained",
-         "home/Ficus/availability"},
-    };
-
-// MQTT-powered weather configs.
-const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
-    kMQTTWeatherConfigs{
-        {"Zurich", "home/Zurich/temp/retained", "home/Zurich/availability"},
-        {"Office", "home/AirSensor/air_temperature/retained",
-         "home/AirSensor/availability"},
+        {"Calethea", "home/Calethea/soil_moisture_percent/retained",
+         "home/Calethea/availability", "%"},
+        {"ChineseLamp", "home/ChineseLamp/soil_moisture_percent/retained",
+         "home/ChineseLamp/availability", "%"},
     };
 
 // MQTT-powered weather configs.
@@ -79,8 +71,9 @@ const std::vector<deskmate::app::MQTTFloatingPointSensorConfig>
     kMQTTWeatherConfigs{
         {"Zurich", "home/Zurich/temp/retained", "home/Zurich/availability",
          kUnitDegreeCelcius},
-        {"Office", "home/AirSensor/air_temperature/retained",
-         "home/AirSensor/availability", kUnitDegreeCelcius},
+        {"Office", "ble_bridge/sensor/office_temperature/state",
+         "ble_bridge/sensor/office_temperature/state/availability",
+         kUnitDegreeCelcius},
     };
 
 }  // namespace credentials

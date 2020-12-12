@@ -1,7 +1,3 @@
-# Since deskmate-sdl2 depends on the desmkate library,
-# this Docker image has to be constructed from the repo's
-# root directory:
-# docker build -f ./code/sdl2/Dockerfile -t deskmate-sdl2-alpine .
 FROM alpine:3.12
 
 RUN apk add --no-cache git clang cmake make binutils build-base libc-dev g++ sdl2-static sdl2_ttf-dev samurai openssl-dev
